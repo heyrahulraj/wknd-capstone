@@ -1,3 +1,5 @@
+@import url('brand.css');
+
 /*
  * Copyright 2020 Adobe. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
@@ -11,62 +13,44 @@
  */
 
 :root {
-  /* colors */
-  --background-color: white;
-  --light-color: #f8f8f8;
+  /* colors (from WKND brand) */
+  --background-color: rgb(255 255 255);
+  --light-color: rgb(242 242 242);
   --dark-color: #505050;
-  --text-color: #131313;
-  --link-color: #3b63fb;
-  --link-hover-color: #1d3ecf;
+  --text-color: rgb(32 32 32);
+  --link-color: rgb(0 69 255);
+  --link-hover-color: rgb(0 55 204);
 
-  /* fonts */
-  --body-font-family: roboto, roboto-fallback, sans-serif;
-  --heading-font-family: roboto-condensed, roboto-condensed-fallback, sans-serif;
+  /* fonts (from WKND brand: Asar headings, Source Sans Pro body) */
+  --body-font-family: "Source Sans Pro", "Helvetica Neue", helvetica, arial, sans-serif;
+  --heading-font-family: "Asar", georgia, "Times New Roman", times, serif;
 
   /* body sizes */
-  --body-font-size-m: 22px;
-  --body-font-size-s: 19px;
-  --body-font-size-xs: 17px;
+  --body-font-size-m: 18px;
+  --body-font-size-s: 16px;
+  --body-font-size-xs: 14px;
 
-  /* heading sizes */
-  --heading-font-size-xxl: 55px;
-  --heading-font-size-xl: 44px;
-  --heading-font-size-l: 34px;
-  --heading-font-size-m: 27px;
-  --heading-font-size-s: 24px;
-  --heading-font-size-xs: 22px;
+  /* heading sizes (mobile) */
+  --heading-font-size-xxl: 36px;
+  --heading-font-size-xl: 28px;
+  --heading-font-size-l: 24px;
+  --heading-font-size-m: 20px;
+  --heading-font-size-s: 18px;
+  --heading-font-size-xs: 16px;
 
   /* nav height */
-  --nav-height: 64px;
-}
-
-/* fallback fonts */
-@font-face {
-  font-family: roboto-condensed-fallback;
-  size-adjust: 88.82%;
-  src: local('Arial');
-}
-
-@font-face {
-  font-family: roboto-fallback;
-  size-adjust: 99.529%;
-  src: local('Arial');
+  --nav-height: 87px;
 }
 
 @media (width >= 900px) {
   :root {
-    /* body sizes */
-    --body-font-size-m: 18px;
-    --body-font-size-s: 16px;
-    --body-font-size-xs: 14px;
-
-    /* heading sizes */
-    --heading-font-size-xxl: 45px;
+    /* heading sizes (desktop, from WKND) */
+    --heading-font-size-xxl: 54px;
     --heading-font-size-xl: 36px;
-    --heading-font-size-l: 28px;
-    --heading-font-size-m: 22px;
-    --heading-font-size-s: 20px;
-    --heading-font-size-xs: 18px;
+    --heading-font-size-l: 24px;
+    --heading-font-size-m: 20px;
+    --heading-font-size-s: 18px;
+    --heading-font-size-xs: 16px;
   }
 }
 
@@ -107,7 +91,7 @@ h6 {
   margin-top: 0.8em;
   margin-bottom: 0.25em;
   font-family: var(--heading-font-family);
-  font-weight: 600;
+  font-weight: 400;
   line-height: 1.25;
   scroll-margin: 40px;
 }
@@ -251,20 +235,21 @@ button.button.secondary:disabled:focus-visible {
   color: var(--dark-color);
 }
 
-/* high-impact call-to-action */
+/* high-impact call-to-action (WKND yellow CTA) */
 a.button.accent,
 button.button.accent {
-  border-color: var(--link-color);
-  background-color: var(--link-color);
-  color: var(--background-color);
+  border-color: var(--brand-accent-color);
+  background-color: var(--brand-accent-color);
+  color: var(--text-color);
 }
 
 a.button.accent:hover,
 a.button.accent:focus-visible,
 button.button.accent:hover,
 button.button.accent:focus-visible {
-  border-color: var(--link-hover-color);
-  background-color: var(--link-hover-color);
+  border-color: var(--brand-accent-hover-color);
+  background-color: var(--brand-accent-hover-color);
+  color: var(--text-color);
 }
 
 a.button.accent[aria-disabled="true"],
@@ -276,6 +261,32 @@ button.button.accent:disabled:focus-visible {
   background-color: var(--light-color);
   border-color: var(--light-color);
   color: var(--dark-color);
+}
+
+/* WKND primary CTA: buttons render as yellow rectangles with uppercase dark text */
+/* stylelint-disable no-descending-specificity */
+main a.button:any-link,
+main button.button {
+  border-radius: 0;
+  border-color: var(--brand-accent-color);
+  background-color: var(--brand-accent-color);
+  color: var(--text-color);
+  font-family: var(--body-font-family);
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 0.75em 1.5em;
+}
+/* stylelint-enable no-descending-specificity */
+
+main a.button:any-link:hover,
+main a.button:any-link:focus-visible,
+main button.button:hover,
+main button.button:focus-visible {
+  border-color: var(--brand-accent-hover-color);
+  background-color: var(--brand-accent-hover-color);
+  color: var(--text-color);
+  text-decoration: none;
 }
 
 main img {
@@ -322,4 +333,23 @@ main .section.highlight {
   background-color: var(--light-color);
   margin: 0;
   padding: 40px 0;
+}
+
+/* WKND grey section (Featured Article) */
+main .section.grey {
+  background-color: var(--section-light-color);
+  margin: 0;
+  padding: 40px 0;
+}
+
+/* default content typography (extracted from WKND source) */
+main .default-content-wrapper h2 {
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+main .default-content-wrapper p {
+  font-size: var(--body-font-size-s);
+  line-height: 1.6;
+  color: var(--text-color);
 }

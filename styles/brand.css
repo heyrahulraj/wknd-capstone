@@ -1,0 +1,22 @@
+:root {
+  --heading-font-family: "Asar", georgia, "Times New Roman", times, serif;
+  --body-font-family: "Source Sans Pro", "Helvetica Neue", helvetica, arial, sans-serif;
+  --background-color: rgb(255 255 255);
+  --text-color: rgb(32 32 32);
+  --link-color: rgb(0 69 255);
+  --link-hover-color: rgb(0 55 204);
+  --section-padding: 10px;
+  --nav-height: 87px;
+  --content-max-width: 1680px;
+
+  /* WKND brand accent (CTA button) */
+  --brand-accent-color: rgb(255 200 5);
+  --brand-accent-hover-color: rgb(230 180 0);
+  --section-light-color: rgb(242 242 242);
+  --heading-size-xxl: 54px;
+  --heading-size-xl: 36px;
+  --heading-size-l: 24px;
+  --heading-size-m: 16px;
+  --heading-size-s: 18px;
+  --heading-size-xs: 16px;
+}

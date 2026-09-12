@@ -1,0 +1,76 @@
+{
+  "metadata": {
+    "projectType": "da"
+  },
+  "templates": [
+    {
+      "name": "home",
+      "urls": [
+        "https://wknd.site/us/en.html"
+      ],
+      "representativeUrl": "https://wknd.site/us/en.html",
+      "description": "WKND homepage: hero carousel, featured article, recent articles cards, mid-page banner, and destination cards.",
+      "urlPattern": "/us/*",
+      "blocks": [
+        {
+          "name": "carousel-hero",
+          "instances": [".carousel.cmp-carousel--hero"]
+        },
+        {
+          "name": "columns-featured",
+          "instances": [".teaser.cmp-teaser--featured"]
+        },
+        {
+          "name": "cards-article",
+          "instances": [".image-list.list"]
+        },
+        {
+          "name": "hero-banner",
+          "instances": [".teaser.cmp-teaser--hero"]
+        }
+      ],
+      "sections": [
+        {
+          "id": "rc2",
+          "name": "Hero Carousel",
+          "selector": [".carousel.cmp-carousel--hero"],
+          "style": null,
+          "blocks": ["carousel-hero"],
+          "defaultContent": []
+        },
+        {
+          "id": "rc3",
+          "name": "Featured Article",
+          "selector": [".teaser.cmp-teaser--featured"],
+          "style": "grey",
+          "blocks": ["columns-featured"],
+          "defaultContent": []
+        },
+        {
+          "id": "rc5",
+          "name": "Recent Articles",
+          "selector": [".image-list.list"],
+          "style": null,
+          "blocks": ["cards-article"],
+          "defaultContent": [".title.cmp-title--underline"]
+        },
+        {
+          "id": "rc9",
+          "name": "Next Adventures / Climbing New Zealand",
+          "selector": [".teaser.cmp-teaser--hero"],
+          "style": null,
+          "blocks": ["hero-banner"],
+          "defaultContent": [".title"]
+        },
+        {
+          "id": "rc12",
+          "name": "Where do you want to go?",
+          "selector": [".image-list.list"],
+          "style": null,
+          "blocks": ["cards-article"],
+          "defaultContent": [".title"]
+        }
+      ]
+    }
+  ]
+}
