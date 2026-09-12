@@ -1,0 +1,11 @@
+{
+  "type": "da",
+  "sites": {
+    "wknd-capstone": {
+      "previewOrg": "heyrahulraj",
+      "previewSite": "wknd-capstone",
+      "contentHostUrl": "https://content.da.live/heyrahulraj/wknd-capstone/",
+      "libraryUrl": "https://main--sta-boilerplate--aemdemos.aem.page/tools/sidekick/library.json"
+    }
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "variantName": "hero-banner",
+  "baseBlock": "hero",
+  "canonicalModel": "standalone",
+  "visualCharacteristics": {
+    "colorScheme": "image",
+    "density": "spacious",
+    "purpose": "mid-page-banner",
+    "imagePattern": "fullbleed-bg",
+    "structure": "background image + heading + description + CTA"
+  },
+  "contentPattern": "One column with a background image row followed by a text row (heading, description, CTA). Text overlays the full-bleed background image.",
+  "usage": "Full-bleed mid-page banner with a background photo and overlaid heading, description, and CTA.",
+  "options": [],
+  "memberVariantIds": ["hero-banner"]
+}

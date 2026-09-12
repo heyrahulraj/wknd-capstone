@@ -1,0 +1,104 @@
+/* hero-banner — full-bleed photo with overlapping white content box */
+
+/* Values extracted from source computed styles (wknd.site teaser--hero--imagebottom) */
+
+/* Full-bleed: override EDS section max-width/padding so the photo spans edge-to-edge */
+.hero-banner-container .hero-banner-wrapper {
+  max-width: none;
+  padding: 0;
+}
+
+.hero-banner {
+  position: relative;
+}
+
+/* Row 1 — background photo */
+.hero-banner > div:first-child {
+  line-height: 0;
+}
+
+.hero-banner > div:first-child picture {
+  display: block;
+}
+
+.hero-banner > div:first-child img {
+  display: block;
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+}
+
+/* Row 2 — white content box, centered, overlapping the photo bottom */
+.hero-banner > div:last-child {
+  position: relative;
+  max-width: 1192px;
+  margin: -60px auto 0;
+  padding: 0;
+}
+
+.hero-banner > div:last-child > div {
+  background-color: var(--background-color);
+  padding: 0 20px;
+}
+
+/* Heading — Asar serif */
+.hero-banner h2 {
+  margin: 18px 0 0;
+  font-family: var(--heading-font-family);
+  font-size: 36px;
+  font-weight: 400;
+  line-height: 54px;
+  color: var(--text-color);
+}
+
+/* Description paragraph */
+.hero-banner p {
+  margin: 0;
+  font-family: var(--body-font-family);
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 31.5px;
+  color: var(--text-color);
+}
+
+/* CTA row (last paragraph wraps the anchor) */
+.hero-banner p:last-child {
+  margin: 18px 0;
+}
+
+/* Yellow "See Trip" CTA button */
+.hero-banner a:any-link {
+  display: inline-block;
+  padding: 14px 35px;
+  border-radius: 0;
+  background-color: var(--brand-accent-color);
+  color: var(--text-color);
+  font-family: var(--body-font-family);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 21px;
+  letter-spacing: normal;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+.hero-banner a:any-link:hover,
+.hero-banner a:any-link:focus-visible {
+  background-color: var(--brand-accent-hover-color);
+  color: var(--text-color);
+  text-decoration: none;
+}
+
+@media (width >= 900px) {
+  .hero-banner > div:first-child img {
+    height: 640px;
+  }
+
+  .hero-banner > div:last-child {
+    margin-top: -180px;
+  }
+
+  .hero-banner > div:last-child > div {
+    padding: 0 28px;
+  }
+}
