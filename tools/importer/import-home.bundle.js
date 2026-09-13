@@ -102,14 +102,33 @@ var CustomImportScript = (() => {
     items.forEach((item) => {
       const image = item.querySelector(".cmp-image-list__item-image img, .cmp-image img, img");
       const titleLink = item.querySelector('.cmp-image-list__item-title-link, a[class*="title"]');
-      const titleText = item.querySelector('.cmp-image-list__item-title, [class*="item-title"]');
+      const imageLink = item.querySelector('.cmp-image-list__item-image-link, a[class*="image-link"]');
+      const titleTextEl = item.querySelector('.cmp-image-list__item-title, [class*="item-title"]');
+      const titleSource = titleTextEl || titleLink;
+      const titleText = titleSource ? titleSource.textContent.trim() : "";
+      const href = titleLink && titleLink.getAttribute("href") || imageLink && imageLink.getAttribute("href") || "";
       const description = item.querySelector('.cmp-image-list__item-description, [class*="description"], p');
-      const textCell = [];
-      if (titleLink) textCell.push(titleLink);
-      else if (titleText) textCell.push(titleText);
-      if (description) textCell.push(description);
-      if (!image && !textCell.length) return;
-      cells.push([image || "", textCell]);
+      if (!image && !titleText) return;
+      const mediaCell = [];
+      if (image) {
+        if (href) {
+          const imgAnchor = document2.createElement("a");
+          imgAnchor.setAttribute("href", href);
+          imgAnchor.append(image);
+          mediaCell.push(imgAnchor);
+        } else {
+          mediaCell.push(image);
+        }
+      }
+      if (titleText) {
+        const titleAnchor = document2.createElement("a");
+        if (href) titleAnchor.setAttribute("href", href);
+        titleAnchor.textContent = titleText;
+        mediaCell.push(titleAnchor);
+      }
+      const descCell = [];
+      if (description) descCell.push(description);
+      cells.push([mediaCell, descCell]);
     });
     if (!cells.length) {
       element.replaceWith(...element.childNodes);

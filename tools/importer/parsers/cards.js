@@ -5,10 +5,10 @@
  * Source: https://wknd.site/us/en.html (.image-list.list)
  * Generated: 2026-09-12
  *
- * Structure (from library-description.txt): 2 columns, multiple rows.
- * First row = block name. Each subsequent row = one card:
- *   cell 1: image (mandatory)
- *   cell 2: text content (title, description, optional CTA)
+ * Structure: 2 columns, multiple rows. First row = block name.
+ * Each subsequent row = one card:
+ *   cell 1: linked image + linked title (both point at the article href)
+ *   cell 2: description text
  */
 export default function parse(element, { document }) {
   const items = Array.from(
@@ -20,21 +20,46 @@ export default function parse(element, { document }) {
   items.forEach((item) => {
     const image = item.querySelector('.cmp-image-list__item-image img, .cmp-image img, img');
 
-    // Title: prefer the linked title so the href is preserved.
+    // Title text + the article href (from the title link or the image link).
     const titleLink = item.querySelector('.cmp-image-list__item-title-link, a[class*="title"]');
-    const titleText = item.querySelector('.cmp-image-list__item-title, [class*="item-title"]');
+    const imageLink = item.querySelector('.cmp-image-list__item-image-link, a[class*="image-link"]');
+    const titleTextEl = item.querySelector('.cmp-image-list__item-title, [class*="item-title"]');
+    const titleSource = titleTextEl || titleLink;
+    const titleText = titleSource ? titleSource.textContent.trim() : '';
+    const href = (titleLink && titleLink.getAttribute('href'))
+      || (imageLink && imageLink.getAttribute('href'))
+      || '';
+
     const description = item.querySelector('.cmp-image-list__item-description, [class*="description"], p');
 
-    const textCell = [];
-    if (titleLink) textCell.push(titleLink);
-    else if (titleText) textCell.push(titleText);
-    if (description) textCell.push(description);
+    // Skip stray items with neither image nor title.
+    if (!image && !titleText) return;
 
-    // Skip stray items with neither image nor text.
-    if (!image && !textCell.length) return;
+    // Cell 1: linked image, then linked title (both use the article href).
+    const mediaCell = [];
+    if (image) {
+      if (href) {
+        const imgAnchor = document.createElement('a');
+        imgAnchor.setAttribute('href', href);
+        imgAnchor.append(image);
+        mediaCell.push(imgAnchor);
+      } else {
+        mediaCell.push(image);
+      }
+    }
+    if (titleText) {
+      const titleAnchor = document.createElement('a');
+      if (href) titleAnchor.setAttribute('href', href);
+      titleAnchor.textContent = titleText;
+      mediaCell.push(titleAnchor);
+    }
 
-    // 2-column row: [image, textContent]
-    cells.push([image || '', textCell]);
+    // Cell 2: description text.
+    const descCell = [];
+    if (description) descCell.push(description);
+
+    // 2-column row: [linkedImage + linkedTitle, description]
+    cells.push([mediaCell, descCell]);
   });
 
   // Empty-block guard.

@@ -50,33 +50,44 @@
   aspect-ratio: 13 / 10;
 }
 
-/* body cell: EDS wraps title <a> + description text in a single <p> */
-.cards.article .cards-card-body p {
-  margin: 0;
-  font-family: var(--body-font-family);
-  font-size: 14px;
-  font-weight: 400;
-  line-height: 21px;
-  text-transform: uppercase;
-  color: rgb(105 105 105);
+/* media cell: linked image on top, linked title stacked below it */
+.cards.article .cards-card-image a {
+  display: block;
+  text-decoration: none;
 }
 
-/* title link -- block so description drops to its own line below */
-.cards.article .cards-card-body p a {
-  display: block;
-  margin: 9px 0 16px;
+/* linked title (the anchor that does not wrap the picture) */
+.cards.article .cards-card-image a:not(:has(picture)) {
+  margin: 9px 0 0;
   font-family: var(--body-font-family);
   font-size: 18px;
   font-weight: 600;
   line-height: 27px;
   text-transform: uppercase;
   color: var(--text-color);
-  text-decoration: none;
 }
 
-.cards.article .cards-card-body p a:hover {
+.cards.article .cards-card-image a:not(:has(picture)):hover {
   color: var(--text-color);
   text-decoration: underline;
+}
+
+/* description cell (source: dimgray uppercase, single line with ellipsis) */
+.cards.article .cards-card-body p {
+  display: block;
+  width: 260px;
+  max-width: 100%;
+  margin: 0;
+  margin-top: 1rem;
+  overflow: hidden;
+  font-family: var(--body-font-family);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 21px;
+  text-transform: uppercase;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: dimgray;
 }
 
 @media (width >= 600px) {
