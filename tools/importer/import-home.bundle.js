@@ -287,7 +287,7 @@ var CustomImportScript = (() => {
         id: "rc5",
         name: "Recent Articles",
         selector: [".image-list.list"],
-        style: "yellow-underline, primary-cta",
+        style: "yellow-underline, primary-cta, custom-separator",
         blocks: ["cards"],
         defaultContent: [".title.cmp-title--underline"]
       },
@@ -303,7 +303,7 @@ var CustomImportScript = (() => {
         id: "rc12",
         name: "Where do you want to go?",
         selector: [".image-list.list"],
-        style: "primary-cta",
+        style: "primary-cta, custom-separator",
         blocks: ["cards"],
         defaultContent: [".title"]
       }

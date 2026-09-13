@@ -382,6 +382,16 @@ main .section.primary-cta .default-content-wrapper a:any-link:focus-visible {
   text-decoration: none;
 }
 
+/* custom-separator section: a thin full-width rule below the section's CTA
+   paragraph (e.g. under "All Articles" / "All Trips"), matching the source
+   .cmp-separator (1px #ebebeb, 4rem vertical margins). */
+main .section.custom-separator .default-content-wrapper p:has(a:any-link)::after {
+  content: "";
+  display: block;
+  margin: 4rem 0;
+  border-top: 1px solid #ebebeb;
+}
+
 main .default-content-wrapper p {
   font-size: var(--body-font-size-s);
   line-height: 1.6;
