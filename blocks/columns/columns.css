@@ -43,8 +43,10 @@
   object-fit: cover;
 }
 
+/* mobile/tablet: text panel on top, image below (source parity).
+   Desktop resets both to order: unset for the side-by-side row. */
 .columns.featured > div > .columns-img-col {
-  order: 0;
+  order: 1;
   padding: 0;
 }
 
@@ -55,9 +57,9 @@
 
 /* content (text) column -- the grey panel */
 .columns.featured > div > div:not(.columns-img-col) {
-  order: 1;
+  order: 0;
   background-color: rgb(235 235 235);
-  padding: 36px 24px;
+  padding: 3.5em 2em 2em;
 }
 
 .columns.featured > div > div:not(.columns-img-col) h2 {
