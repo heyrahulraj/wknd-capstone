@@ -43,8 +43,10 @@
   object-fit: cover;
 }
 
+/* mobile/tablet: text panel on top, image below (source parity).
+   Desktop resets both to order: unset for the side-by-side row. */
 .columns.featured > div > .columns-img-col {
-  order: 0;
+  order: 1;
   padding: 0;
 }
 
@@ -55,9 +57,9 @@
 
 /* content (text) column -- the grey panel */
 .columns.featured > div > div:not(.columns-img-col) {
-  order: 1;
+  order: 0;
   background-color: rgb(235 235 235);
-  padding: 36px 24px;
+  padding: 3.5em 2em 2em;
 }
 
 .columns.featured > div > div:not(.columns-img-col) h2 {
@@ -118,9 +120,13 @@
   .columns.featured > div {
     flex-direction: row;
     align-items: stretch;
+
+    /* the base `.columns > div` sets gap: 24px; the featured variant sits the
+       grey panel flush against the image, so no gap here */
+    gap: 0;
   }
 
-  /* image ~62%, content panel ~38% (matches source proportions) */
+  /* image ~62%, content panel ~32% (matches source proportions) */
   .columns.featured > div > .columns-img-col {
     flex: 0 0 62%;
     order: unset;
@@ -131,7 +137,7 @@
   }
 
   .columns.featured > div > div:not(.columns-img-col) {
-    flex: 0 0 38%;
+    flex: 0 0 32%;
     order: unset;
     padding: 63px 36px 36px;
   }
