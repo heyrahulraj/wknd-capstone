@@ -260,7 +260,7 @@ var CustomImportScript = (() => {
         id: "rc3",
         name: "Featured Article",
         selector: [".teaser.cmp-teaser--featured"],
-        style: null,
+        style: "yellow-underline",
         blocks: ["columns"],
         defaultContent: []
       },
@@ -268,7 +268,7 @@ var CustomImportScript = (() => {
         id: "rc5",
         name: "Recent Articles",
         selector: [".image-list.list"],
-        style: null,
+        style: "yellow-underline, primary-cta",
         blocks: ["cards"],
         defaultContent: [".title.cmp-title--underline"]
       },
@@ -284,7 +284,7 @@ var CustomImportScript = (() => {
         id: "rc12",
         name: "Where do you want to go?",
         selector: [".image-list.list"],
-        style: null,
+        style: "primary-cta",
         blocks: ["cards"],
         defaultContent: [".title"]
       }
