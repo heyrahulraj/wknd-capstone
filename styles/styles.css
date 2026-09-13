@@ -238,8 +238,8 @@ button.button.secondary:disabled:focus-visible {
 /* high-impact call-to-action (WKND yellow CTA) */
 a.button.accent,
 button.button.accent {
-  border-color: var(--brand-accent-color);
-  background-color: var(--brand-accent-color);
+  border-color: var(--brand-primary, #ffea00);
+  background-color: var(--brand-primary, #ffea00);
   color: var(--text-color);
 }
 
@@ -268,8 +268,8 @@ button.button.accent:disabled:focus-visible {
 main a.button:any-link,
 main button.button {
   border-radius: 0;
-  border-color: var(--brand-accent-color);
-  background-color: var(--brand-accent-color);
+  border-color: var(--brand-primary, #ffea00);
+  background-color: var(--brand-primary, #ffea00);
   color: var(--text-color);
   font-family: var(--body-font-family);
   font-weight: 600;

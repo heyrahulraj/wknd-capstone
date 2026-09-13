@@ -51,14 +51,36 @@
   z-index: 1;
 }
 
-/* indicators (dots) */
+/* controls row: dots + arrows are siblings inside the <nav>. The nav is the
+   positioning context so the dots can center across the full width while the
+   arrows sit pinned to the right edge. */
+.carousel nav[aria-label='Carousel Slide Controls'] {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+/* indicators (dots) — centered across the full control row */
 .carousel .carousel-slide-indicators {
   display: flex;
+  flex: 1;
   flex-wrap: wrap;
   justify-content: center;
   gap: 12px;
   padding: 16px 12px;
   line-height: 0;
+}
+
+/* navigation arrows — taken out of flow and pinned to the right of the control
+   row so the dots stay centered across the full width */
+.carousel .carousel-navigation-buttons {
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  transform: translateY(-50%);
 }
 
 .carousel .carousel-slide-indicator button {
@@ -77,17 +99,6 @@
 .carousel .carousel-slide-indicator button:hover,
 .carousel .carousel-slide-indicator button:focus-visible {
   background-color: rgb(32 32 32);
-}
-
-/* navigation arrows */
-.carousel .carousel-navigation-buttons {
-  position: absolute;
-  bottom: 12px;
-  right: 12px;
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  z-index: 2;
 }
 
 /* stylelint-disable-next-line no-descending-specificity */
@@ -141,6 +152,11 @@ main > .section > .carousel-wrapper {
   aspect-ratio: 16 / 9;
 }
 
+/* mobile/tablet: dots left-aligned, arrows stay pinned right (source parity) */
+.carousel.hero-img .carousel-slide-indicators {
+  justify-content: flex-start;
+}
+
 .carousel.hero-img .carousel-slide-content {
   padding: 8px 14px 24px;
   color: rgb(32 32 32);
@@ -172,7 +188,7 @@ main > .section > .carousel-wrapper {
 .carousel.hero-img .carousel-slide-content a:any-link {
   display: inline-block;
   padding: 14px 35px;
-  background-color: var(--brand-accent-color);
+  background-color: var(--brand-primary, #ffea00);
   color: rgb(32 32 32);
   font-family: var(--body-font-family);
   font-size: 14px;
@@ -198,6 +214,7 @@ main > .section > .carousel-wrapper {
   }
 
   .carousel.hero-img .carousel-slide-content {
+    box-sizing: border-box;
     width: 100%;
     max-width: 1192px;
     margin: -180px auto 0;
@@ -205,8 +222,12 @@ main > .section > .carousel-wrapper {
     background-color: rgb(255 255 255);
   }
 
+  /* desktop: dots centered across the full width again */
+  .carousel.hero-img .carousel-slide-indicators {
+    justify-content: center;
+  }
+
   .carousel.hero-img .carousel-navigation-buttons {
     right: 24px;
-    bottom: 18px;
   }
 }
