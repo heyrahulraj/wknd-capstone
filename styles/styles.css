@@ -22,8 +22,8 @@
   --link-hover-color: rgb(0 55 204);
 
   /* fonts (from WKND brand: Asar headings, Source Sans Pro body) */
-  --body-font-family: "Source Sans Pro", "Helvetica Neue", helvetica, arial, sans-serif;
-  --heading-font-family: "Asar", georgia, "Times New Roman", times, serif;
+  --body-font-family: "Source Sans Pro", "Source Sans Pro Fallback", "Helvetica Neue", helvetica, arial, sans-serif;
+  --heading-font-family: "Asar", "Asar Fallback", georgia, "Times New Roman", times, serif;
 
   /* body sizes */
   --body-font-size-m: 18px;
