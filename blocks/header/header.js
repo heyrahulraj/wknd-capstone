@@ -91,10 +91,25 @@ function buildLocale(section) {
  * @param {Element} nav The nav element
  * @param {boolean|null} forceExpanded Force a state, or null to toggle
  */
+let savedScrollY = 0;
+
 function toggleMenu(nav, forceExpanded = null) {
   const expanded = forceExpanded !== null ? !forceExpanded : nav.getAttribute('aria-expanded') === 'true';
   const button = nav.querySelector('.nav-hamburger button');
-  document.body.style.overflowY = (expanded || isDesktop.matches) ? '' : 'hidden';
+  const willOpen = !expanded && !isDesktop.matches;
+  const { body } = document;
+
+  if (willOpen) {
+    // lock scroll: pin the body at the current position (robust on mobile)
+    savedScrollY = window.scrollY;
+    body.style.top = `-${savedScrollY}px`;
+    body.classList.add('nav-drawer-open');
+  } else if (body.classList.contains('nav-drawer-open')) {
+    body.classList.remove('nav-drawer-open');
+    body.style.top = '';
+    window.scrollTo(0, savedScrollY);
+  }
+
   nav.setAttribute('aria-expanded', expanded ? 'false' : 'true');
   if (button) button.setAttribute('aria-label', expanded ? 'Open navigation' : 'Close navigation');
 }

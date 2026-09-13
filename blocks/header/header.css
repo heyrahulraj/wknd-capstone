@@ -20,16 +20,12 @@ header .nav-wrapper {
 header nav {
   display: grid;
   grid-template-areas:
-    'hamburger utility'
-    'brand brand'
-    'sections sections';
+    'utility utility'
+    'hamburger brand';
+  grid-template-columns: auto 1fr;
   align-items: center;
   gap: 0;
   font-family: var(--body-font-family);
-}
-
-header nav[aria-expanded='true'] {
-  overflow-y: auto;
 }
 
 header nav p { margin: 0; }
@@ -45,13 +41,18 @@ header nav a:any-link {
   text-decoration: none;
 }
 
-/* utility bar (Sign In + locale) */
+/* utility bar (Sign In + locale) — full-width dark row.
+   Mobile/tablet: Sign In pinned left, locale selector pinned right, and the
+   bar stays above the open drawer so it remains visible + clickable. */
 header nav .nav-utility {
   grid-area: utility;
+  position: relative;
+  z-index: 1060;
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: space-between;
   gap: 14px;
+  padding: 4px 16px;
   background-color: rgb(32 32 32);
   color: rgb(235 235 235);
   font-size: 14px;
@@ -142,24 +143,68 @@ header nav .nav-brand img {
   height: auto;
 }
 
-/* main nav — mobile: dark slide-in drawer from the left */
+/* --- mobile push drawer --------------------------------------------------
+   The dark nav drawer is pinned to the left edge of the viewport; opening it
+   shifts the whole page right (a "push" drawer, matching the source) and locks
+   body scroll. Drawer width is exposed as a custom property so the page-shift
+   distance always equals the drawer width. */
+:root {
+  --nav-drawer-width: min(66vw, 300px);
+  --nav-utility-height: 34px;
+  --content-max-width-nav: 1200px;
+}
+
+/* main nav — mobile: dark drawer pinned to the left, below the utility bar.
+   Sits over the header's left area so the menu items occupy the space
+   vacated as <main> pushes right. Hidden until the drawer opens. */
 header nav .nav-sections {
   grid-area: sections;
   position: fixed;
   top: 0;
   left: 0;
-  bottom: 0;
-  width: min(75vw, 320px);
-  padding: 56px 0 0;
+
+  /* Explicit full-viewport height — the ancestor <header> is translated on
+     open, which makes this fixed element resolve against the (short) header
+     box, so `bottom: 0` would only reach the header's bottom (white below).
+     A fixed height covers the whole left column. */
+  height: 100vh;
+  height: 100dvh;
+  width: var(--nav-drawer-width);
+  padding: var(--nav-utility-height, 34px) 0 0;
   background-color: rgb(42 42 42);
-  transform: translateX(-100%);
-  transition: transform 0.3s ease;
   overflow-y: auto;
-  z-index: 1040;
+  visibility: hidden;
+  transition: transform 0.3s ease;
+  z-index: 1050;
 }
 
-header nav[aria-expanded='true'] .nav-sections {
-  transform: translateX(0);
+/* When the drawer opens, the header (utility bar, logo, hamburger) AND <main>
+   shift right by the drawer width; the drawer (nav-sections) is position:fixed
+   at left:0 so it stays put and is revealed in the vacated space.
+   Body scroll is locked (position:fixed, JS sets `top`). */
+body.nav-drawer-open {
+  position: fixed;
+  width: 100%;
+  overflow: hidden;
+}
+
+body.nav-drawer-open header,
+body.nav-drawer-open main {
+  transform: translateX(var(--nav-drawer-width));
+}
+
+/* smooth open/close */
+header,
+main {
+  transition: transform 0.3s ease;
+}
+
+/* drawer becomes visible on open; counter-translate by the drawer width so it
+   stays pinned to the viewport's left edge even though its ancestor <header>
+   is translated right */
+body.nav-drawer-open header nav .nav-sections {
+  visibility: visible;
+  transform: translateX(calc(-1 * var(--nav-drawer-width)));
 }
 
 header nav .nav-sections ul {
@@ -188,15 +233,6 @@ header nav .nav-sections a:any-link {
 header nav .nav-sections a:hover {
   background-color: rgb(58 58 58);
   color: rgb(255 255 255);
-}
-
-/* backdrop behind the open drawer */
-header nav[aria-expanded='true']::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  background-color: rgb(0 0 0 / 40%);
-  z-index: 1035;
 }
 
 /* search — hidden inside the mobile drawer; shown in the desktop main bar */
@@ -229,13 +265,14 @@ header nav .nav-search input:focus {
   outline: none;
 }
 
-/* hamburger (mobile) — grey rounded-square button, matches source */
+/* hamburger (mobile) — grey rounded-square button, matches source.
+   Sits in the pushed header (no elevated z-index), so it moves right with
+   the page rather than floating over the drawer. */
 header nav .nav-hamburger {
   grid-area: hamburger;
   display: flex;
   align-items: center;
   padding-left: 16px;
-  z-index: 1045;
 }
 
 header nav .nav-hamburger button {
@@ -300,10 +337,31 @@ header nav[aria-expanded='true'] .nav-hamburger-icon::after {
     grid-template-columns: auto 1fr;
     column-gap: 24px;
     align-items: center;
+    max-width: var(--content-max-width-nav, 1200px);
+    margin: 0 auto;
   }
 
+  /* desktop never pushes / locks — reset the mobile drawer transforms */
+  body.nav-drawer-open {
+    position: static;
+    overflow: visible;
+  }
+
+  body.nav-drawer-open main {
+    transform: none;
+  }
+
+  /* utility bar: dark background spans the full viewport width, while its
+     content (Sign In + locale) stays grouped on the right, aligned to the
+     1200px content edge. Full-bleed via the 100vw break-out trick. */
   header nav .nav-utility {
-    padding: 4px 40px;
+    justify-content: flex-end;
+    gap: 24px;
+    padding: 4px 0;
+    margin-left: calc((100% - 100vw) / 2);
+    margin-right: calc((100% - 100vw) / 2);
+    padding-right: max(40px, calc((100vw - var(--content-max-width-nav, 1200px)) / 2 + 40px));
+    padding-left: 40px;
   }
 
   /* landing state: generous padding; reduces + gains shadow on scroll (see .scrolly) */
@@ -323,7 +381,9 @@ header nav[aria-expanded='true'] .nav-hamburger-icon::after {
   header nav .nav-sections {
     position: static;
     width: auto;
+    height: auto;
     transform: none;
+    visibility: visible;
     background-color: transparent;
     display: flex;
     align-items: center;
@@ -331,11 +391,7 @@ header nav[aria-expanded='true'] .nav-hamburger-icon::after {
     gap: 32px;
     padding: 0 40px;
     overflow: visible;
-  }
-
-  /* no backdrop on desktop */
-  header nav[aria-expanded='true']::before {
-    display: none;
+    z-index: auto;
   }
 
   header nav .nav-sections ul {
