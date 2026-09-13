@@ -13,19 +13,19 @@
       "urlPattern": "/us/*",
       "blocks": [
         {
-          "name": "carousel-hero",
+          "name": "carousel",
           "instances": [".carousel.cmp-carousel--hero"]
         },
         {
-          "name": "columns-featured",
+          "name": "columns",
           "instances": [".teaser.cmp-teaser--featured"]
         },
         {
-          "name": "cards-article",
+          "name": "cards",
           "instances": [".image-list.list"]
         },
         {
-          "name": "hero-banner",
+          "name": "hero",
           "instances": [".teaser.cmp-teaser--hero"]
         }
       ],
@@ -35,7 +35,7 @@
           "name": "Hero Carousel",
           "selector": [".carousel.cmp-carousel--hero"],
           "style": null,
-          "blocks": ["carousel-hero"],
+          "blocks": ["carousel"],
           "defaultContent": []
         },
         {
@@ -43,7 +43,7 @@
           "name": "Featured Article",
           "selector": [".teaser.cmp-teaser--featured"],
           "style": "grey",
-          "blocks": ["columns-featured"],
+          "blocks": ["columns"],
           "defaultContent": []
         },
         {
@@ -51,7 +51,7 @@
           "name": "Recent Articles",
           "selector": [".image-list.list"],
           "style": null,
-          "blocks": ["cards-article"],
+          "blocks": ["cards"],
           "defaultContent": [".title.cmp-title--underline"]
         },
         {
@@ -59,7 +59,7 @@
           "name": "Next Adventures / Climbing New Zealand",
           "selector": [".teaser.cmp-teaser--hero"],
           "style": null,
-          "blocks": ["hero-banner"],
+          "blocks": ["hero"],
           "defaultContent": [".title"]
         },
         {
@@ -67,7 +67,7 @@
           "name": "Where do you want to go?",
           "selector": [".image-list.list"],
           "style": null,
-          "blocks": ["cards-article"],
+          "blocks": ["cards"],
           "defaultContent": [".title"]
         }
       ]

@@ -35,3 +35,104 @@
     padding: 40px 32px;
   }
 }
+
+/* ---- Variant: banner (full-bleed photo with overlapping white content box) ---- */
+
+/* Values extracted from source computed styles (wknd.site teaser--hero--imagebottom) */
+
+.hero.banner {
+  position: static;
+  padding: 0;
+  min-height: 0;
+}
+
+/* Row 1 — background photo (in normal flow, not the base absolute overlay) */
+.hero.banner > div:first-child {
+  line-height: 0;
+}
+
+.hero.banner picture {
+  position: static;
+  z-index: auto;
+  inset: auto;
+  display: block;
+}
+
+.hero.banner > div:first-child img {
+  display: block;
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+}
+
+/* Row 2 — white content box, centered, overlapping the photo bottom */
+.hero.banner > div:last-child {
+  position: relative;
+  max-width: 1192px;
+  margin: -60px auto 0;
+  padding: 0;
+}
+
+.hero.banner > div:last-child > div {
+  background-color: var(--background-color);
+  padding: 0 20px;
+}
+
+.hero.banner h2 {
+  max-width: none;
+  margin: 18px 0 0;
+  font-family: var(--heading-font-family);
+  font-size: 36px;
+  font-weight: 400;
+  line-height: 54px;
+  color: var(--text-color);
+}
+
+.hero.banner p {
+  margin: 0;
+  font-family: var(--body-font-family);
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 31.5px;
+  color: var(--text-color);
+}
+
+.hero.banner p:last-child {
+  margin: 18px 0;
+}
+
+.hero.banner a:any-link {
+  display: inline-block;
+  padding: 14px 35px;
+  border-radius: 0;
+  background-color: var(--brand-accent-color);
+  color: var(--text-color);
+  font-family: var(--body-font-family);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 21px;
+  letter-spacing: normal;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+.hero.banner a:any-link:hover,
+.hero.banner a:any-link:focus-visible {
+  background-color: var(--brand-accent-hover-color);
+  color: var(--text-color);
+  text-decoration: none;
+}
+
+@media (width >= 900px) {
+  .hero.banner > div:first-child img {
+    height: 640px;
+  }
+
+  .hero.banner > div:last-child {
+    margin-top: -180px;
+  }
+
+  .hero.banner > div:last-child > div {
+    padding: 0 28px;
+  }
+}

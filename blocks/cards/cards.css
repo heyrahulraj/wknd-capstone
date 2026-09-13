@@ -25,3 +25,69 @@
   aspect-ratio: 4 / 3;
   object-fit: cover;
 }
+
+/* ---- Variant: article (4-up borderless article/adventure card grid) ---- */
+
+/* Values extracted from source computed styles (.image-list.list on wknd.site) */
+
+.cards.article > ul {
+  grid-template-columns: 1fr;
+  gap: 32px;
+}
+
+.cards.article > ul > li {
+  /* source cards have no border, no background, no box-shadow */
+  background: none;
+  border: 0;
+  box-shadow: none;
+}
+
+.cards.article .cards-card-body {
+  margin: 0;
+}
+
+.cards.article > ul > li img {
+  aspect-ratio: 13 / 10;
+}
+
+/* body cell: EDS wraps title <a> + description text in a single <p> */
+.cards.article .cards-card-body p {
+  margin: 0;
+  font-family: var(--body-font-family);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 21px;
+  text-transform: uppercase;
+  color: rgb(105 105 105);
+}
+
+/* title link -- block so description drops to its own line below */
+.cards.article .cards-card-body p a {
+  display: block;
+  margin: 9px 0 16px;
+  font-family: var(--body-font-family);
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 27px;
+  text-transform: uppercase;
+  color: var(--text-color);
+  text-decoration: none;
+}
+
+.cards.article .cards-card-body p a:hover {
+  color: var(--text-color);
+  text-decoration: underline;
+}
+
+@media (width >= 600px) {
+  .cards.article > ul {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (width >= 900px) {
+  .cards.article > ul {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 32px 14px;
+  }
+}
