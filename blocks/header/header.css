@@ -417,13 +417,14 @@ header nav[aria-expanded='true'] .nav-hamburger-icon::after {
   header nav .nav-search {
     display: flex;
     margin-top: 0;
+    margin-bottom: 0;
     min-width: 180px;
   }
 
   /* scrolled state: reduce the main-bar padding + add drop shadow (source parity) */
   header.scrolly nav .nav-brand {
     padding-top: 15px;
-    padding-bottom: 5px;
+    padding-bottom: 15px;
   }
 }
 
