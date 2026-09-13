@@ -37,6 +37,6 @@ export default function parse(element, { document }) {
   // Single 2-column content row: [image, textContent]
   const cells = [[image || '', textCell]];
 
-  const block = WebImporter.Blocks.createBlock(document, { name: 'columns-featured', cells });
+  const block = WebImporter.Blocks.createBlock(document, { name: 'columns', variants: ['featured'], cells });
   element.replaceWith(block);
 }

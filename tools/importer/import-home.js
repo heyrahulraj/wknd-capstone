@@ -2,21 +2,21 @@
 /* global WebImporter */
 
 // PARSER IMPORTS
-import carouselHeroParser from './parsers/carousel-hero.js';
-import columnsFeaturedParser from './parsers/columns-featured.js';
-import cardsArticleParser from './parsers/cards-article.js';
-import heroBannerParser from './parsers/hero-banner.js';
+import carouselParser from './parsers/carousel.js';
+import columnsParser from './parsers/columns.js';
+import cardsParser from './parsers/cards.js';
+import heroParser from './parsers/hero.js';
 
 // TRANSFORMER IMPORTS
 import cleanupTransformer from './transformers/wknd-cleanup.js';
 import sectionsTransformer from './transformers/wknd-sections.js';
 
-// PARSER REGISTRY - Map parser names to functions
+// PARSER REGISTRY - Map block names to functions (keys match page-templates.json)
 const parsers = {
-  'carousel-hero': carouselHeroParser,
-  'columns-featured': columnsFeaturedParser,
-  'cards-article': cardsArticleParser,
-  'hero-banner': heroBannerParser,
+  carousel: carouselParser,
+  columns: columnsParser,
+  cards: cardsParser,
+  hero: heroParser,
 };
 
 // PAGE TEMPLATE CONFIGURATION - Embedded from page-templates.json
@@ -28,19 +28,19 @@ const PAGE_TEMPLATE = {
   ],
   blocks: [
     {
-      name: 'carousel-hero',
+      name: 'carousel',
       instances: ['.carousel.cmp-carousel--hero'],
     },
     {
-      name: 'columns-featured',
+      name: 'columns',
       instances: ['.teaser.cmp-teaser--featured'],
     },
     {
-      name: 'cards-article',
+      name: 'cards',
       instances: ['.image-list.list'],
     },
     {
-      name: 'hero-banner',
+      name: 'hero',
       instances: ['.teaser.cmp-teaser--hero'],
     },
   ],
@@ -50,7 +50,7 @@ const PAGE_TEMPLATE = {
       name: 'Hero Carousel',
       selector: ['.carousel.cmp-carousel--hero'],
       style: null,
-      blocks: ['carousel-hero'],
+      blocks: ['carousel'],
       defaultContent: [],
     },
     {
@@ -58,7 +58,7 @@ const PAGE_TEMPLATE = {
       name: 'Featured Article',
       selector: ['.teaser.cmp-teaser--featured'],
       style: 'grey',
-      blocks: ['columns-featured'],
+      blocks: ['columns'],
       defaultContent: [],
     },
     {
@@ -66,7 +66,7 @@ const PAGE_TEMPLATE = {
       name: 'Recent Articles',
       selector: ['.image-list.list'],
       style: null,
-      blocks: ['cards-article'],
+      blocks: ['cards'],
       defaultContent: ['.title.cmp-title--underline'],
     },
     {
@@ -74,7 +74,7 @@ const PAGE_TEMPLATE = {
       name: 'Next Adventures / Climbing New Zealand',
       selector: ['.teaser.cmp-teaser--hero'],
       style: null,
-      blocks: ['hero-banner'],
+      blocks: ['hero'],
       defaultContent: ['.title'],
     },
     {
@@ -82,7 +82,7 @@ const PAGE_TEMPLATE = {
       name: 'Where do you want to go?',
       selector: ['.image-list.list'],
       style: null,
-      blocks: ['cards-article'],
+      blocks: ['cards'],
       defaultContent: ['.title'],
     },
   ],

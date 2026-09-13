@@ -35,6 +35,6 @@ export default function parse(element, { document }) {
   if (bgImage) cells.push([[bgImage]]);
   cells.push([textCell]);
 
-  const block = WebImporter.Blocks.createBlock(document, { name: 'hero-banner', cells });
+  const block = WebImporter.Blocks.createBlock(document, { name: 'hero', variants: ['banner'], cells });
   element.replaceWith(block);
 }

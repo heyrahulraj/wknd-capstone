@@ -41,7 +41,7 @@ var CustomImportScript = (() => {
     default: () => import_home_default
   });
 
-  // tools/importer/parsers/carousel-hero.js
+  // tools/importer/parsers/carousel.js
   function parse(element, { document: document2 }) {
     let slides = Array.from(element.querySelectorAll(".cmp-carousel__item"));
     if (!slides.length) {
@@ -66,11 +66,11 @@ var CustomImportScript = (() => {
       element.replaceWith(...element.childNodes);
       return;
     }
-    const block = WebImporter.Blocks.createBlock(document2, { name: "carousel-hero", cells });
+    const block = WebImporter.Blocks.createBlock(document2, { name: "carousel", variants: ["hero-img"], cells });
     element.replaceWith(block);
   }
 
-  // tools/importer/parsers/columns-featured.js
+  // tools/importer/parsers/columns.js
   function parse2(element, { document: document2 }) {
     const image = element.querySelector('img, .cmp-image img, [class*="image"] img');
     const eyebrow = element.querySelector('.cmp-teaser__pretitle, [class*="pretitle"], [class*="eyebrow"]');
@@ -89,11 +89,11 @@ var CustomImportScript = (() => {
       return;
     }
     const cells = [[image || "", textCell]];
-    const block = WebImporter.Blocks.createBlock(document2, { name: "columns-featured", cells });
+    const block = WebImporter.Blocks.createBlock(document2, { name: "columns", variants: ["featured"], cells });
     element.replaceWith(block);
   }
 
-  // tools/importer/parsers/cards-article.js
+  // tools/importer/parsers/cards.js
   function parse3(element, { document: document2 }) {
     const items = Array.from(
       element.querySelectorAll(".cmp-image-list__item, li")
@@ -115,11 +115,11 @@ var CustomImportScript = (() => {
       element.replaceWith(...element.childNodes);
       return;
     }
-    const block = WebImporter.Blocks.createBlock(document2, { name: "cards-article", cells });
+    const block = WebImporter.Blocks.createBlock(document2, { name: "cards", variants: ["article"], cells });
     element.replaceWith(block);
   }
 
-  // tools/importer/parsers/hero-banner.js
+  // tools/importer/parsers/hero.js
   function parse4(element, { document: document2 }) {
     const bgImage = element.querySelector('.cmp-teaser__image img, .cmp-image img, img[class*="background"], img');
     const heading = element.querySelector('h1, h2, h3, .cmp-teaser__title, [class*="title"]:not([class*="pretitle"])');
@@ -138,7 +138,7 @@ var CustomImportScript = (() => {
     const cells = [];
     if (bgImage) cells.push([[bgImage]]);
     cells.push([textCell]);
-    const block = WebImporter.Blocks.createBlock(document2, { name: "hero-banner", cells });
+    const block = WebImporter.Blocks.createBlock(document2, { name: "hero", variants: ["banner"], cells });
     element.replaceWith(block);
   }
 
@@ -218,10 +218,10 @@ var CustomImportScript = (() => {
 
   // tools/importer/import-home.js
   var parsers = {
-    "carousel-hero": parse,
-    "columns-featured": parse2,
-    "cards-article": parse3,
-    "hero-banner": parse4
+    carousel: parse,
+    columns: parse2,
+    cards: parse3,
+    hero: parse4
   };
   var PAGE_TEMPLATE = {
     name: "home",
@@ -231,19 +231,19 @@ var CustomImportScript = (() => {
     ],
     blocks: [
       {
-        name: "carousel-hero",
+        name: "carousel",
         instances: [".carousel.cmp-carousel--hero"]
       },
       {
-        name: "columns-featured",
+        name: "columns",
         instances: [".teaser.cmp-teaser--featured"]
       },
       {
-        name: "cards-article",
+        name: "cards",
         instances: [".image-list.list"]
       },
       {
-        name: "hero-banner",
+        name: "hero",
         instances: [".teaser.cmp-teaser--hero"]
       }
     ],
@@ -253,7 +253,7 @@ var CustomImportScript = (() => {
         name: "Hero Carousel",
         selector: [".carousel.cmp-carousel--hero"],
         style: null,
-        blocks: ["carousel-hero"],
+        blocks: ["carousel"],
         defaultContent: []
       },
       {
@@ -261,7 +261,7 @@ var CustomImportScript = (() => {
         name: "Featured Article",
         selector: [".teaser.cmp-teaser--featured"],
         style: "grey",
-        blocks: ["columns-featured"],
+        blocks: ["columns"],
         defaultContent: []
       },
       {
@@ -269,7 +269,7 @@ var CustomImportScript = (() => {
         name: "Recent Articles",
         selector: [".image-list.list"],
         style: null,
-        blocks: ["cards-article"],
+        blocks: ["cards"],
         defaultContent: [".title.cmp-title--underline"]
       },
       {
@@ -277,7 +277,7 @@ var CustomImportScript = (() => {
         name: "Next Adventures / Climbing New Zealand",
         selector: [".teaser.cmp-teaser--hero"],
         style: null,
-        blocks: ["hero-banner"],
+        blocks: ["hero"],
         defaultContent: [".title"]
       },
       {
@@ -285,7 +285,7 @@ var CustomImportScript = (() => {
         name: "Where do you want to go?",
         selector: [".image-list.list"],
         style: null,
-        blocks: ["cards-article"],
+        blocks: ["cards"],
         defaultContent: [".title"]
       }
     ]
