@@ -109,12 +109,15 @@ export default async function decorate(block) {
 
   let slideIndicators;
   if (!isSingleSlide) {
-    const slideIndicatorsNav = document.createElement('nav');
-    slideIndicatorsNav.setAttribute('aria-label', 'Carousel Slide Controls');
+    // A single <nav> holds both the indicator dots and the prev/next buttons as
+    // siblings, so they can be laid out on one control row (dots centered,
+    // arrows pinned right).
+    const slideControlsNav = document.createElement('nav');
+    slideControlsNav.setAttribute('aria-label', 'Carousel Slide Controls');
+
     slideIndicators = document.createElement('ol');
     slideIndicators.classList.add('carousel-slide-indicators');
-    slideIndicatorsNav.append(slideIndicators);
-    block.append(slideIndicatorsNav);
+    slideControlsNav.append(slideIndicators);
 
     const slideNavButtons = document.createElement('div');
     slideNavButtons.classList.add('carousel-navigation-buttons');
@@ -122,8 +125,9 @@ export default async function decorate(block) {
       <button type="button" class= "slide-prev" aria-label="Previous Slide"></button>
       <button type="button" class="slide-next" aria-label="Next Slide"></button>
     `;
+    slideControlsNav.append(slideNavButtons);
 
-    container.append(slideNavButtons);
+    block.append(slideControlsNav);
   }
 
   rows.forEach((row, idx) => {
