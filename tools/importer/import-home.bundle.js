@@ -260,7 +260,7 @@ var CustomImportScript = (() => {
         id: "rc3",
         name: "Featured Article",
         selector: [".teaser.cmp-teaser--featured"],
-        style: "grey",
+        style: null,
         blocks: ["columns"],
         defaultContent: []
       },

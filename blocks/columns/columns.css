@@ -118,9 +118,13 @@
   .columns.featured > div {
     flex-direction: row;
     align-items: stretch;
+
+    /* the base `.columns > div` sets gap: 24px; the featured variant sits the
+       grey panel flush against the image, so no gap here */
+    gap: 0;
   }
 
-  /* image ~62%, content panel ~38% (matches source proportions) */
+  /* image ~62%, content panel ~32% (matches source proportions) */
   .columns.featured > div > .columns-img-col {
     flex: 0 0 62%;
     order: unset;
@@ -131,7 +135,7 @@
   }
 
   .columns.featured > div > div:not(.columns-img-col) {
-    flex: 0 0 38%;
+    flex: 0 0 32%;
     order: unset;
     padding: 63px 36px 36px;
   }
