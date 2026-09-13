@@ -4,9 +4,13 @@
 
 /* The boilerplate styles.css pins `header { height: var(--nav-height) }`, which
    clips this taller two-row header and lets the hero overlap it. Let the header
-   size to its content instead. Sticky on scroll to match the source. */
+   size to its content instead. Sticky on scroll to match the source.
+   min-height reserves the header's rendered height from first paint (before the
+   nav fragment loads lazily) so the LCP hero below it does not shift — this is
+   what keeps CLS low. Values match the rendered header at each breakpoint. */
 header {
   height: auto;
+  min-height: 118px;
   position: sticky;
   top: 0;
   z-index: 1030;
@@ -334,6 +338,11 @@ header nav[aria-expanded='true'] .nav-hamburger-icon::after {
 }
 
 @media (width >= 900px) {
+  /* taller header on desktop (bigger brand padding) — reserve its height too */
+  header {
+    min-height: 166px;
+  }
+
   header nav {
     grid-template-areas:
       'utility utility utility'
@@ -434,4 +443,10 @@ header nav[aria-expanded='true'] .nav-hamburger-icon::after {
 /* scrolled state (all viewports): drop shadow appears as the header sticks */
 header.scrolly .nav-wrapper {
   box-shadow: 0 8px 20px 0 rgb(0 0 0 / 26%);
+}
+
+/* once scrolled the nav has loaded and shrinks; release the reserved height so
+   the shrink-on-scroll isn't blocked (CLS only accrues at initial paint) */
+header.scrolly {
+  min-height: 0;
 }
