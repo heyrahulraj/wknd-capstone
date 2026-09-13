@@ -149,4 +149,12 @@ export default async function decorate(block) {
   navWrapper.className = 'nav-wrapper';
   navWrapper.append(nav);
   block.append(navWrapper);
+
+  // scroll state: shrink padding + add shadow once the page scrolls (source parity)
+  const header = block.closest('header') || block;
+  const onScroll = () => {
+    header.classList.toggle('scrolly', window.scrollY > 0);
+  };
+  onScroll();
+  window.addEventListener('scroll', onScroll, { passive: true });
 }
