@@ -38,10 +38,13 @@ function resolveImagePaths(scope, base) {
 /**
  * Builds the inline search form from a `:search:` marker paragraph.
  * The marker lives in nav.plain.html; the form controls are created here.
+ * On DA/EDS the `:search:` token is rendered as an icon span
+ * (`<span class="icon icon-search">`), so match either form.
  * @param {Element} scope The section that may contain the search marker
  */
 function buildSearch(scope) {
-  const marker = [...scope.querySelectorAll('p')].find((p) => p.textContent.trim() === ':search:');
+  const marker = [...scope.querySelectorAll('p')].find((p) => p.textContent.trim() === ':search:')
+    || scope.querySelector('.icon-search')?.closest('p');
   if (!marker) return;
   const form = document.createElement('form');
   form.className = 'nav-search';
