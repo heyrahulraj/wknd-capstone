@@ -20,9 +20,9 @@ header .nav-wrapper {
 header nav {
   display: grid;
   grid-template-areas:
-    'utility utility'
-    'hamburger brand';
-  grid-template-columns: auto 1fr;
+    'utility utility utility'
+    'hamburger brand search';
+  grid-template-columns: auto 1fr auto;
   align-items: center;
   gap: 0;
   font-family: var(--body-font-family);
@@ -235,13 +235,16 @@ header nav .nav-sections a:hover {
   color: rgb(255 255 255);
 }
 
-/* search — hidden inside the mobile drawer; shown in the desktop main bar */
+/* search — in the main bar (right of the logo), visible at all breakpoints.
+   Kept compact on mobile so it fits beside the logo. */
 header nav .nav-search {
-  display: none;
+  grid-area: search;
+  display: flex;
   align-items: center;
   gap: 8px;
-  margin-top: 12px;
+  margin: 0 16px 0 0;
   padding: 8px 12px;
+  max-width: 44vw;
   background-color: var(--light-color);
 }
 
@@ -259,6 +262,7 @@ header nav .nav-search input {
   font: inherit;
   color: var(--text-color);
   width: 100%;
+  min-width: 0;
 }
 
 header nav .nav-search input:focus {
@@ -332,9 +336,9 @@ header nav[aria-expanded='true'] .nav-hamburger-icon::after {
 @media (width >= 900px) {
   header nav {
     grid-template-areas:
-      'utility utility'
-      'brand sections';
-    grid-template-columns: auto 1fr;
+      'utility utility utility'
+      'brand sections search';
+    grid-template-columns: auto 1fr auto;
     column-gap: 24px;
     align-items: center;
     max-width: var(--content-max-width-nav, 1200px);
@@ -415,10 +419,9 @@ header nav[aria-expanded='true'] .nav-hamburger-icon::after {
   }
 
   header nav .nav-search {
-    display: flex;
-    margin-top: 0;
-    margin-bottom: 0;
+    margin: 0;
     min-width: 180px;
+    max-width: none;
   }
 
   /* scrolled state: reduce the main-bar padding + add drop shadow (source parity) */

@@ -150,6 +150,11 @@ export default async function decorate(block) {
   const navSections = nav.querySelector('.nav-sections');
   if (navSections) buildSearch(navSections);
 
+  // move the search out of the (mobile-drawer) sections into the main bar so it
+  // stays visible at all breakpoints, matching the source
+  const navSearch = nav.querySelector('.nav-search');
+  if (navSearch) nav.append(navSearch);
+
   // hamburger for mobile
   const hamburger = document.createElement('div');
   hamburger.classList.add('nav-hamburger');
