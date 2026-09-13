@@ -348,6 +348,40 @@ main .default-content-wrapper h2 {
   line-height: 1.5;
 }
 
+/* yellow-underline section: a short yellow rule under the section's
+   default-content headings (e.g. "Recent Articles", "Next Adventures").
+   Scoped to default content so block headings in the same section are unaffected. */
+main .section.yellow-underline .default-content-wrapper h2::after {
+  content: "";
+  display: block;
+  width: 84px;
+  padding-top: 8px;
+  border-bottom: 2px solid var(--brand-primary, #ffea00);
+}
+
+/* primary-cta section: render the section's trailing default-content links
+   (e.g. "All Articles", "All Trips") as WKND yellow primary CTA buttons. */
+main .section.primary-cta .default-content-wrapper a:any-link {
+  display: inline-block;
+  padding: 14px 35px;
+  border-radius: 0;
+  background-color: var(--brand-primary, #ffea00);
+  color: var(--text-color);
+  font-family: var(--body-font-family);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 21px;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+main .section.primary-cta .default-content-wrapper a:any-link:hover,
+main .section.primary-cta .default-content-wrapper a:any-link:focus-visible {
+  background-color: var(--brand-accent-hover-color);
+  color: var(--text-color);
+  text-decoration: none;
+}
+
 main .default-content-wrapper p {
   font-size: var(--body-font-size-s);
   line-height: 1.6;
