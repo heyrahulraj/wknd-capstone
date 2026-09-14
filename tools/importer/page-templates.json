@@ -4,6 +4,63 @@
   },
   "templates": [
     {
+      "name": "adventures-landing",
+      "urls": [
+        "https://wknd.site/us/en/adventures.html"
+      ],
+      "representativeUrl": "https://wknd.site/us/en/adventures.html",
+      "description": "Adventures landing page: intro promo + dynamic filterable adventure listing",
+      "blocks": [
+        {
+          "name": "breadcrumb",
+          "instances": [".breadcrumb.cmp-breadcrumb--fixed"]
+        },
+        {
+          "name": "carousel",
+          "instances": [".teaser.cmp-teaser--hero"]
+        },
+        {
+          "name": "adventure-list",
+          "instances": [".image-list.list"]
+        }
+      ],
+      "sections": [
+        {
+          "id": "rc1",
+          "name": "Breadcrumb",
+          "selector": [".breadcrumb.cmp-breadcrumb--fixed"],
+          "style": null,
+          "blocks": ["breadcrumb"],
+          "defaultContent": []
+        },
+        {
+          "id": "rc2",
+          "name": "Adventures Title",
+          "selector": [".title.cmp-title--underline", ".title"],
+          "style": "yellow-underline",
+          "blocks": [],
+          "defaultContent": [".title.cmp-title--underline", ".title"]
+        },
+        {
+          "id": "rc3",
+          "name": "Intro Promo",
+          "selector": [".teaser.cmp-teaser--hero"],
+          "style": null,
+          "blocks": ["columns"],
+          "defaultContent": []
+        },
+        {
+          "id": "rc4",
+          "name": "Current Adventures",
+          "selector": [".title.cmp-title--underline"],
+          "style": "yellow-underline",
+          "blocks": ["adventure-list"],
+          "defaultContent": [".title.cmp-title--underline"]
+        }
+      ],
+      "urlPattern": "/us/en/adventures"
+    },
+    {
       "name": "adventures",
       "urls": [
         "https://wknd.site/us/en/adventures/bali-surf-camp.html"

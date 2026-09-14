@@ -1,0 +1,17 @@
+{
+  "status": "success",
+  "url": "https://wknd.site/us/en/adventures.html",
+  "path": "us/en/adventures",
+  "timestamp": "2026-09-14T11:48:04.413Z",
+  "title": "Adventures",
+  "template": "adventures-landing",
+  "blocks": [
+    "carousel",
+    "adventure-list",
+    "adventure-list",
+    "adventure-list",
+    "adventure-list",
+    "adventure-list",
+    "adventure-list"
+  ]
+}

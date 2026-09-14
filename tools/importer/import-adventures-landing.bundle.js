@@ -42,68 +42,46 @@ var CustomImportScript = (() => {
   });
 
 
-  // tools/importer/parsers/carousel-mini.js
-  function parse(element, { document: document2 }) {
-    let slides = Array.from(element.querySelectorAll(".cmp-carousel__item"));
-    if (!slides.length) slides = [element];
-    const cells = [];
-    slides.forEach((slide) => {
-      const image = slide.querySelector('img, .cmp-image img, [class*="image"] img');
-      if (!image) return;
-      cells.push([image, ""]);
-    });
-    if (!cells.length) { element.replaceWith(...element.childNodes); return; }
+
+  // tools/importer/parsers/breadcrumb.js
+  function parseBreadcrumb(element, { document: document2 }) {
+    const block = WebImporter.Blocks.createBlock(document2, { name: "breadcrumb", cells: [[""]] });
+    element.replaceWith(block);
+  }
+
+  // tools/importer/parsers/adventures-intro.js (carousel hero-img intro)
+  function parseIntro(element, { document: document2 }) {
+    const image = element.querySelector('img, .cmp-image img, [class*="image"] img');
+    const heading = element.querySelector('h1, h2, h3, .cmp-teaser__title, [class*="title"]:not([class*="pretitle"]):not([class*="eyebrow"])');
+    const description = element.querySelector('.cmp-teaser__description, [class*="description"], p:not([class*="pretitle"])');
+    const textCell = [];
+    if (heading) textCell.push(heading);
+    if (description) textCell.push(description);
+    if (!image && !textCell.length) { element.replaceWith(...element.childNodes); return; }
+    const cells = [[image || "", textCell]];
     const block = WebImporter.Blocks.createBlock(document2, { name: "carousel", variants: ["hero-img"], cells });
     element.replaceWith(block);
   }
 
-  // tools/importer/parsers/columns-spec.js
-  function parse2(element, { document: document2 }) {
-    const items = Array.from(element.querySelectorAll(".cmp-contentfragment__element"));
+  // tools/importer/parsers/adventure-list.js
+  function parseAdventureList(element, { document: document2 }) {
+    if (document2.body.dataset.adventureListDone) { element.remove(); return; }
+    document2.body.dataset.adventureListDone = "true";
+    const seen = /* @__PURE__ */ new Set();
     const cells = [];
-    items.forEach((item) => {
-      const label = item.querySelector(".cmp-contentfragment__element-title, dt");
-      const value = item.querySelector(".cmp-contentfragment__element-value, dd");
-      const labelText = label ? label.textContent.trim() : "";
-      const valueText = value ? value.textContent.trim() : "";
-      if (!labelText && !valueText) return;
-      const labelEl = document2.createElement("p"); labelEl.textContent = labelText;
-      const valueEl = document2.createElement("p"); valueEl.textContent = valueText;
-      if (/^activity$/i.test(labelText) && valueText) { document2.body.dataset.activity = valueText; }
-      cells.push([[labelEl], [valueEl]]);
+    document2.querySelectorAll(".image-list.list a[href], a[href]").forEach((a) => {
+      const href = a.getAttribute("href") || "";
+      if (!/\/adventures\/[^/]+\.html?$/.test(href)) return;
+      const clean = href.replace(/\.html?$/, "");
+      if (seen.has(clean)) return;
+      seen.add(clean);
+      const link = document2.createElement("a");
+      link.setAttribute("href", clean);
+      link.textContent = (a.textContent || "").trim() || clean;
+      cells.push([[link]]);
     });
     if (!cells.length) { element.replaceWith(...element.childNodes); return; }
-    const block = WebImporter.Blocks.createBlock(document2, { name: "columns", variants: ["spec"], cells });
-    element.replaceWith(block);
-  }
-
-  // tools/importer/parsers/tabs-adventure.js
-  function parse3(element, { document: document2 }) {
-    const tabs = Array.from(element.querySelectorAll(".cmp-tabs__tab"));
-    const panels = Array.from(element.querySelectorAll(".cmp-tabs__tabpanel"));
-    const cells = [];
-    tabs.forEach((tab, i) => {
-      const labelText = tab.textContent.trim();
-      const panel = panels[i];
-      if (!labelText || !panel) return;
-      const labelEl = document2.createElement("p"); labelEl.textContent = labelText;
-      const contentNodes = [];
-      const source = panel.querySelector(".cmp-contentfragment") || panel;
-      source.querySelectorAll("p, img, h2, h3, h4, ul, ol").forEach((node) => {
-        if (node.classList && node.classList.contains("cmp-contentfragment__title")) return;
-        if (node.tagName === "IMG" || node.textContent.trim() || node.querySelector("img")) contentNodes.push(node);
-      });
-      if (!contentNodes.length) contentNodes.push(panel);
-      cells.push([[labelEl], contentNodes]);
-    });
-    if (!cells.length) { element.replaceWith(...element.childNodes); return; }
-    const block = WebImporter.Blocks.createBlock(document2, { name: "tabs", variants: ["adventure"], cells });
-    element.replaceWith(block);
-  }
-
-  // tools/importer/parsers/breadcrumb.js
-  function parse0(element, { document: document2 }) {
-    const block = WebImporter.Blocks.createBlock(document2, { name: "breadcrumb", cells: [[""]] });
+    const block = WebImporter.Blocks.createBlock(document2, { name: "adventure-list", cells });
     element.replaceWith(block);
   }
 
@@ -182,28 +160,27 @@ var CustomImportScript = (() => {
   }
 
 
-  // tools/importer/import-adventures.js
+
+  // tools/importer/import-adventures-landing.js
   var parsers = {
-    breadcrumb: parse0,
-    carousel: parse,
-    columns: parse2,
-    tabs: parse3
+    breadcrumb: parseBreadcrumb,
+    carousel: parseIntro,
+    "adventure-list": parseAdventureList
   };
   var PAGE_TEMPLATE = {
-    name: "adventures",
-    description: "Adventure detail page: top hero image, title, spec details, and content tabs.",
-    urls: ["https://wknd.site/us/en/adventures/bali-surf-camp.html"],
+    name: "adventures-landing",
+    description: "Adventures landing page: intro promo + dynamic filterable adventure listing.",
+    urls: ["https://wknd.site/us/en/adventures.html"],
     blocks: [
       { name: "breadcrumb", instances: [".breadcrumb.cmp-breadcrumb--fixed"] },
-      { name: "carousel", instances: [".carousel.cmp-carousel--mini"] },
-      { name: "columns", instances: [".contentfragment.cmp-contentfragment--elements"] },
-      { name: "tabs", instances: [".tabs.panelcontainer"] }
+      { name: "carousel", instances: [".teaser.cmp-teaser--hero"] },
+      { name: "adventure-list", instances: [".image-list.list"] }
     ],
     sections: [
       { id: "rc1", name: "Breadcrumb", selector: [".breadcrumb.cmp-breadcrumb--fixed"], style: null, blocks: ["breadcrumb"], defaultContent: [] },
-      { id: "rc2", name: "Top Hero Image", selector: [".carousel.cmp-carousel--mini"], style: null, blocks: ["carousel"], defaultContent: [] },
-      { id: "rc4", name: "Adventure Title", selector: [".title.cmp-title--underline"], style: "yellow-underline", blocks: [], defaultContent: [".title.cmp-title--underline"] },
-      { id: "rc-body", name: "Adventure Body (spec + share + tabs)", selector: [".contentfragment.cmp-contentfragment--elements"], style: "adventure-body", blocks: ["columns", "tabs"], defaultContent: [] }
+      { id: "rc2", name: "Adventures Title", selector: [".title.cmp-title--underline, .title"], style: "yellow-underline", blocks: [], defaultContent: [".title.cmp-title--underline, .title"] },
+      { id: "rc3", name: "Intro Promo", selector: [".teaser.cmp-teaser--hero"], style: null, blocks: ["carousel"], defaultContent: [] },
+      { id: "rc4", name: "Current Adventures", selector: [".title.cmp-title--underline"], style: "yellow-underline", blocks: ["adventure-list"], defaultContent: [".title.cmp-title--underline"] }
     ]
   };
   var transformers = [
@@ -235,6 +212,7 @@ var CustomImportScript = (() => {
       const { document: document2, url, params } = payload;
       const main = document2.body;
       executeTransformers("beforeTransform", main, payload);
+      WebImporter.DOMUtils.remove(main, [".cmp-tabs__tablist"]);
       const pageBlocks = findBlocksOnPage(document2, PAGE_TEMPLATE);
       pageBlocks.forEach((block) => {
         if (!block.element.parentNode) return;
