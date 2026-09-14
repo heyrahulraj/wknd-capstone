@@ -1,11 +1,10 @@
 /* eslint-disable */
 /* global WebImporter */
 
-// PARSER IMPORTS (adventures template — distinct from home parsers)
+// PARSER IMPORTS (adventures landing template)
 import breadcrumbParser from './parsers/breadcrumb.js';
-import carouselMiniParser from './parsers/carousel-mini.js';
-import columnsSpecParser from './parsers/columns-spec.js';
-import tabsAdventureParser from './parsers/tabs-adventure.js';
+import introParser from './parsers/adventures-intro.js';
+import adventureListParser from './parsers/adventure-list.js';
 
 // TRANSFORMER IMPORTS
 import cleanupTransformer from './transformers/wknd-cleanup.js';
@@ -14,23 +13,21 @@ import sectionsTransformer from './transformers/wknd-sections.js';
 // PARSER REGISTRY - keys match page-templates.json block names
 const parsers = {
   breadcrumb: breadcrumbParser,
-  carousel: carouselMiniParser,
-  columns: columnsSpecParser,
-  tabs: tabsAdventureParser,
+  carousel: introParser,
+  'adventure-list': adventureListParser,
 };
 
-// PAGE TEMPLATE CONFIGURATION - Embedded (adventures template)
+// PAGE TEMPLATE CONFIGURATION - Embedded (adventures landing template)
 const PAGE_TEMPLATE = {
-  name: 'adventures',
-  description: 'Adventure detail page: top hero image, title, spec details, and content tabs.',
+  name: 'adventures-landing',
+  description: 'Adventures landing page: intro promo + dynamic filterable adventure listing.',
   urls: [
-    'https://wknd.site/us/en/adventures/bali-surf-camp.html',
+    'https://wknd.site/us/en/adventures.html',
   ],
   blocks: [
     { name: 'breadcrumb', instances: ['.breadcrumb.cmp-breadcrumb--fixed'] },
-    { name: 'carousel', instances: ['.carousel.cmp-carousel--mini'] },
-    { name: 'columns', instances: ['.contentfragment.cmp-contentfragment--elements'] },
-    { name: 'tabs', instances: ['.tabs.panelcontainer'] },
+    { name: 'carousel', instances: ['.teaser.cmp-teaser--hero'] },
+    { name: 'adventure-list', instances: ['.image-list.list'] },
   ],
   sections: [
     {
@@ -43,27 +40,27 @@ const PAGE_TEMPLATE = {
     },
     {
       id: 'rc2',
-      name: 'Top Hero Image',
-      selector: ['.carousel.cmp-carousel--mini'],
+      name: 'Adventures Title',
+      selector: ['.title.cmp-title--underline', '.title'],
+      style: 'yellow-underline',
+      blocks: [],
+      defaultContent: ['.title.cmp-title--underline', '.title'],
+    },
+    {
+      id: 'rc3',
+      name: 'Intro Promo',
+      selector: ['.teaser.cmp-teaser--hero'],
       style: null,
       blocks: ['carousel'],
       defaultContent: [],
     },
     {
       id: 'rc4',
-      name: 'Adventure Title',
+      name: 'Current Adventures',
       selector: ['.title.cmp-title--underline'],
       style: 'yellow-underline',
-      blocks: [],
+      blocks: ['adventure-list'],
       defaultContent: ['.title.cmp-title--underline'],
-    },
-    {
-      id: 'rc-body',
-      name: 'Adventure Body (spec + share + tabs)',
-      selector: ['.contentfragment.cmp-contentfragment--elements'],
-      style: 'adventure-body',
-      blocks: ['columns', 'tabs'],
-      defaultContent: [],
     },
   ],
 };
@@ -106,6 +103,10 @@ export default {
 
     executeTransformers('beforeTransform', main, payload);
 
+    // drop the source's static tab labels (All/Climbing/Cycling/…) — the
+    // adventure-list block renders its own dynamic activity filter tabs
+    WebImporter.DOMUtils.remove(main, ['.cmp-tabs__tablist']);
+
     const pageBlocks = findBlocksOnPage(document, PAGE_TEMPLATE);
     pageBlocks.forEach((block) => {
       if (!block.element.parentNode) return;
@@ -128,16 +129,6 @@ export default {
     WebImporter.rules.createMetadata(main, document);
     WebImporter.rules.transformBackgroundImages(main, document);
     WebImporter.rules.adjustImageUrls(main, url, params.originalURL);
-
-    // tag the page with its Activity (stashed on <body> by the columns-spec
-    // parser) so the adventures landing page can build a dynamic, filterable
-    // listing. Emit a second Metadata block with the `activity` field — EDS
-    // merges metadata blocks, so it becomes <meta name="activity"> at render.
-    const activity = main.dataset.activity || '';
-    if (activity) {
-      const metaBlock = WebImporter.Blocks.createBlock(document, { name: 'Metadata', cells: { activity } });
-      main.append(metaBlock);
-    }
 
     const rawPath = new URL(params.originalURL).pathname
       .replace(/\/$/, '')

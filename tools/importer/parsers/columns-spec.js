@@ -27,6 +27,12 @@ export default function parse(element, { document }) {
     const valueEl = document.createElement('p');
     valueEl.textContent = valueText;
 
+    // stash the Activity value on the body so the import transform can write it
+    // to page metadata for the dynamic adventures listing
+    if (/^activity$/i.test(labelText) && valueText) {
+      document.body.dataset.activity = valueText;
+    }
+
     // one spec per row, 2 columns: [label, value]
     cells.push([[labelEl], [valueEl]]);
   });

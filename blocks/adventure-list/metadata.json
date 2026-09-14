@@ -1,0 +1,19 @@
+{
+  "variantName": "adventure-list",
+  "baseBlock": "adventure-list",
+  "visualCharacteristics": {
+    "purpose": "Dynamic, filterable grid of adventure cards driven by page metadata",
+    "layout": "Row of activity filter tabs above a responsive card grid"
+  },
+  "contentPattern": {
+    "structure": "Authored as a marker block containing links to the adventure pages (or empty when a query-index is published); cards + filter tabs are built at render time from each page's Activity"
+  },
+  "usage": {
+    "pagesUsing": [
+      { "url": "/us/en/adventures" }
+    ]
+  },
+  "canonicalModel": "standalone",
+  "options": [],
+  "memberVariantIds": ["adventure-list"]
+}
