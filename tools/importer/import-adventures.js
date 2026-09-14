@@ -131,12 +131,25 @@ export default {
 
     // tag the page with its Activity (stashed on <body> by the columns-spec
     // parser) so the adventures landing page can build a dynamic, filterable
-    // listing. Emit a second Metadata block with the `activity` field — EDS
-    // merges metadata blocks, so it becomes <meta name="activity"> at render.
+    // listing. Add the `activity` row to the SINGLE metadata block created above
+    // rather than emitting a second Metadata block — EDS extracts only one
+    // metadata block into <meta> head tags; a separate one renders as visible
+    // page content. createMetadata inserts a <table> (first cell "Metadata"),
+    // so find it and append the row, keeping it invisible as <meta name="activity">.
     const activity = main.dataset.activity || '';
     if (activity) {
-      const metaBlock = WebImporter.Blocks.createBlock(document, { name: 'Metadata', cells: { activity } });
-      main.append(metaBlock);
+      const metaTable = [...main.querySelectorAll('table')].find(
+        (t) => /^metadata$/i.test((t.querySelector('th, td')?.textContent || '').trim()),
+      );
+      if (metaTable) {
+        const tr = document.createElement('tr');
+        const key = document.createElement('td');
+        key.textContent = 'activity';
+        const val = document.createElement('td');
+        val.textContent = activity;
+        tr.append(key, val);
+        (metaTable.querySelector('tbody') || metaTable).append(tr);
+      }
     }
 
     const rawPath = new URL(params.originalURL).pathname
