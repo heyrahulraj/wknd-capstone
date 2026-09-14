@@ -78,8 +78,20 @@ function createSlide(row, slideIndex, carouselId) {
   slide.classList.add('carousel-slide');
 
   row.querySelectorAll(':scope > div').forEach((column, colIdx) => {
-    column.classList.add(`carousel-slide-${colIdx === 0 ? 'image' : 'content'}`);
-    slide.append(column);
+    if (colIdx === 0) {
+      column.classList.add('carousel-slide-image');
+      slide.append(column);
+      return;
+    }
+    // The content cell is optional: an image-only slide authors an empty second
+    // cell. Keep it only when it holds real content, otherwise drop it so the
+    // hero-img content card doesn't render as an empty white box.
+    const hasContent = column.textContent.trim()
+      || column.querySelector('img, picture, a, h1, h2, h3, h4, h5, h6, ul, ol, button');
+    if (hasContent) {
+      column.classList.add('carousel-slide-content');
+      slide.append(column);
+    }
   });
 
   const labeledBy = slide.querySelector('h1, h2, h3, h4, h5, h6');
@@ -95,7 +107,6 @@ export default async function decorate(block) {
   carouselId += 1;
   block.setAttribute('id', `carousel-${carouselId}`);
   const rows = block.querySelectorAll(':scope > div');
-  const isSingleSlide = rows.length < 2;
 
   block.setAttribute('role', 'region');
   block.setAttribute('aria-roledescription', 'Carousel');
@@ -107,28 +118,26 @@ export default async function decorate(block) {
   slidesWrapper.classList.add('carousel-slides');
   block.prepend(slidesWrapper);
 
-  let slideIndicators;
-  if (!isSingleSlide) {
-    // A single <nav> holds both the indicator dots and the prev/next buttons as
-    // siblings, so they can be laid out on one control row (dots centered,
-    // arrows pinned right).
-    const slideControlsNav = document.createElement('nav');
-    slideControlsNav.setAttribute('aria-label', 'Carousel Slide Controls');
+  // Always render the slide controls — even a single-slide carousel shows the
+  // indicator dot and prev/next arrows (source parity).
+  // A single <nav> holds both the indicator dots and the prev/next buttons as
+  // siblings, so they lay out on one control row (dots centered, arrows right).
+  const slideControlsNav = document.createElement('nav');
+  slideControlsNav.setAttribute('aria-label', 'Carousel Slide Controls');
 
-    slideIndicators = document.createElement('ol');
-    slideIndicators.classList.add('carousel-slide-indicators');
-    slideControlsNav.append(slideIndicators);
+  const slideIndicators = document.createElement('ol');
+  slideIndicators.classList.add('carousel-slide-indicators');
+  slideControlsNav.append(slideIndicators);
 
-    const slideNavButtons = document.createElement('div');
-    slideNavButtons.classList.add('carousel-navigation-buttons');
-    slideNavButtons.innerHTML = `
-      <button type="button" class= "slide-prev" aria-label="Previous Slide"></button>
-      <button type="button" class="slide-next" aria-label="Next Slide"></button>
-    `;
-    slideControlsNav.append(slideNavButtons);
+  const slideNavButtons = document.createElement('div');
+  slideNavButtons.classList.add('carousel-navigation-buttons');
+  slideNavButtons.innerHTML = `
+    <button type="button" class= "slide-prev" aria-label="Previous Slide"></button>
+    <button type="button" class="slide-next" aria-label="Next Slide"></button>
+  `;
+  slideControlsNav.append(slideNavButtons);
 
-    block.append(slideControlsNav);
-  }
+  block.append(slideControlsNav);
 
   rows.forEach((row, idx) => {
     const slide = createSlide(row, idx, carouselId);
@@ -147,7 +156,5 @@ export default async function decorate(block) {
   container.append(slidesWrapper);
   block.prepend(container);
 
-  if (!isSingleSlide) {
-    bindEvents(block);
-  }
+  bindEvents(block);
 }

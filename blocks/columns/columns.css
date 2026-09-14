@@ -143,4 +143,52 @@
   }
 }
 
+/* ---- Variant: spec (labelled key/value adventure spec list) ---- */
+
+/* Each row is one spec: cell 1 = label, cell 2 = value. Stacked rows with a
+   yellow left accent, matching the adventure detail spec column. */
+.columns.spec > div {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 4px;
+  padding: 12px 0 12px 16px;
+  border-left: 5px solid var(--brand-third, #ebebeb);
+  margin-bottom: 1.25em;
+}
+
+.columns.spec > div > div {
+  order: unset;
+  flex: unset;
+}
+
+/* label (first cell) */
+.columns.spec > div > div:first-child {
+  font-size: 14px;
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: dimgray;
+}
+
+/* value (second cell) */
+.columns.spec > div > div:last-child {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.columns.spec > div > div p {
+  margin: 0;
+  text-transform: uppercase;
+}
+
+@media (width >= 900px) {
+  /* keep the spec column stacked (label over value) even on desktop */
+  .columns.spec > div {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 4px;
+  }
+}
+
 /* stylelint-enable no-descending-specificity */

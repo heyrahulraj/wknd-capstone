@@ -1,0 +1,94 @@
+/* Tabs: a horizontal tablist above a bordered content panel. Structural only —
+   colours/spacing tokens come from the design layer. */
+
+.tabs .tabs-list {
+  display: flex;
+  gap: 0.5ch;
+  max-width: 100%;
+  overflow-x: auto;
+  font-size: var(--body-font-size-xs);
+}
+
+@media (width >= 600px) {
+  .tabs .tabs-list {
+    font-size: var(--body-font-size-s);
+  }
+}
+
+@media (width >= 900px) {
+  .tabs .tabs-list {
+    font-size: var(--body-font-size-m);
+  }
+}
+
+.tabs .tabs-list button {
+  flex: 0 0 max-content;
+  margin: 0;
+  padding: 0.5em 1em;
+  border: 1px solid #dadada;
+  border-radius: 0;
+  background-color: var(--light-color);
+  color: initial;
+  font-weight: bold;
+  line-height: unset;
+  text-align: initial;
+  text-overflow: unset;
+  overflow: unset;
+  white-space: unset;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.tabs .tabs-list button p {
+  margin: 0;
+}
+
+.tabs .tabs-list button[aria-selected='true'] {
+  border-bottom: 1px solid var(--background-color);
+  background-color: var(--background-color);
+  cursor: initial;
+}
+
+.tabs .tabs-panel {
+  margin-top: -1px;
+  padding: 24px;
+  border: 1px solid #dadada;
+  overflow: auto;
+}
+
+.tabs .tabs-panel[aria-hidden='true'] {
+  display: none;
+}
+
+.tabs .tabs-panel img {
+  width: 100%;
+  height: auto;
+}
+
+/* ---- Variant: adventure (trip detail tabs — Overview / Itinerary / What to Bring) ---- */
+
+.tabs.adventure .tabs-list {
+  gap: 24px;
+}
+
+.tabs.adventure .tabs-list button {
+  border: 0;
+  padding: 12px 0;
+  background-color: transparent;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+/* active tab: solid dark chip with white text (source parity) */
+.tabs.adventure .tabs-list button[aria-selected='true'] {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-color: inherit;
+  background-color: #202020;
+  color: #fff;
+}
+
+.tabs.adventure .tabs-panel {
+  border: 0;
+  padding: 24px 0;
+}
