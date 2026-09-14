@@ -102,3 +102,86 @@
     gap: 32px 14px;
   }
 }
+
+/* ---- Variant: people (contributor/guide profile grid) ---- */
+
+/* Profile cards: portrait image, name, role, and social links. Borderless,
+   text centered under the photo (source: about-us contributors/guides). */
+
+.cards.people > ul {
+  grid-template-columns: 1fr;
+  gap: 40px;
+}
+
+.cards.people > ul > li {
+  background: none;
+  border: 0;
+  box-shadow: none;
+  text-align: center;
+}
+
+.cards.people .cards-card-body {
+  margin: 16px 0 0;
+}
+
+.cards.people > ul > li img {
+  width: 164px;
+  height: 164px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.cards.people .cards-card-body h3 {
+  margin: 0;
+  font-size: 22px;
+  text-transform: uppercase;
+}
+
+/* role subtitle: the paragraph immediately after the name */
+.cards.people .cards-card-body h3 + p {
+  margin: 4px 0 16px;
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+/* social icon bar: dark strip with the network glyphs centered in a row,
+   matching the avatar width and centered under it */
+.cards.people .cards-social {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  width: 164px;
+  margin: 0 auto;
+  padding: 18px 0;
+  background-color: rgb(32 32 32);
+}
+
+.cards.people .cards-social-link {
+  display: inline-flex;
+  color: rgb(255 255 255);
+}
+
+.cards.people .cards-social-link svg {
+  width: 24px;
+  height: 24px;
+  fill: currentcolor;
+}
+
+.cards.people .cards-social-link:hover {
+  color: var(--brand-primary, #ffea00);
+}
+
+@media (width >= 600px) {
+  .cards.people > ul {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 40px 24px;
+  }
+}
+
+@media (width >= 900px) {
+  .cards.people > ul {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 48px 24px;
+  }
+}
