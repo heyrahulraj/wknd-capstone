@@ -349,8 +349,10 @@ main .default-content-wrapper h2 {
 }
 
 /* yellow-underline section: a short yellow rule under the section's
-   default-content headings (e.g. "Recent Articles", "Next Adventures").
-   Scoped to default content so block headings in the same section are unaffected. */
+   default-content headings (e.g. "Recent Articles", "Next Adventures", the
+   adventure page's H1 title). Scoped to default content so block headings in
+   the same section are unaffected. */
+main .section.yellow-underline .default-content-wrapper h1::after,
 main .section.yellow-underline .default-content-wrapper h2::after {
   content: "";
   display: block;
@@ -390,6 +392,76 @@ main .section.custom-separator .default-content-wrapper p:has(a:any-link)::after
   display: block;
   margin: 4rem 0;
   border-top: 1px solid #ebebeb;
+}
+
+/* adventure-body section.
+   Mobile/tablet (< 900px): spec (columns) and Share sit side by side on the top
+   row, with the tabs panel full width below them.
+   Desktop (>= 900px): spec + Share stack in a narrow left column beside the
+   wider tabs panel. The boilerplate caps + centres each block wrapper at 1200px;
+   the grid replaces that so the blocks sit as intended. */
+main > .section.adventure-body {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 24px;
+}
+
+main > .section.adventure-body > div {
+  max-width: none;
+  margin: 0;
+}
+
+main .section.adventure-body .columns-wrapper {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+main .section.adventure-body .default-content-wrapper {
+  grid-column: 2;
+  grid-row: 1;
+
+  /* uppercase the default content in this section (e.g. "Share this Adventure") */
+  text-transform: uppercase;
+}
+
+main .section.adventure-body .tabs-wrapper {
+  grid-column: 1 / span 2;
+  grid-row: 2;
+}
+
+@media (width >= 900px) {
+  main > .section.adventure-body {
+    display: grid;
+    grid-template-columns: minmax(220px, 1fr) 2fr;
+    column-gap: 48px;
+    align-items: start;
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 0 32px;
+  }
+
+  /* the boilerplate caps + centres each block wrapper at 1200px; reset that so
+     the wrappers fill their grid cells instead */
+  main > .section.adventure-body > div {
+    max-width: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  main .section.adventure-body .columns-wrapper {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  main .section.adventure-body .default-content-wrapper {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  main .section.adventure-body .tabs-wrapper {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+  }
 }
 
 main .default-content-wrapper p {

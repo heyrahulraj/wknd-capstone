@@ -1,0 +1,48 @@
+/* Breadcrumb: horizontal, uppercase trail with yellow arrow separators.
+   Structural/functional only — colours inherit from brand tokens. */
+
+.breadcrumb ol {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.breadcrumb li {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--text-color);
+}
+
+/* yellow arrow separator before every crumb except the first */
+.breadcrumb li + li::before {
+  content: "";
+  display: inline-block;
+  width: 0;
+  height: 0;
+  margin-right: 8px;
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+  border-left: 7px solid var(--brand-primary, #ffea00);
+}
+
+.breadcrumb a:any-link {
+  color: var(--text-color);
+  text-decoration: none;
+}
+
+.breadcrumb a:hover {
+  text-decoration: underline;
+}
+
+/* current page (leaf) — not a link, lighter weight to sit back from the trail */
+.breadcrumb li[aria-current="page"] {
+  font-weight: 400;
+}

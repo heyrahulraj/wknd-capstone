@@ -1,0 +1,25 @@
+{
+  "variantName": "tabs",
+  "baseBlock": "tabs",
+  "visualCharacteristics": {
+    "purpose": "Interactive tab switcher that reveals one content panel at a time",
+    "layout": "Horizontal tablist above a single bordered content panel"
+  },
+  "contentPattern": {
+    "structure": "One row per tab: cell 1 = tab label, cell 2 = tab panel content"
+  },
+  "usage": {
+    "pagesUsing": [
+      { "url": "/us/en/adventures/bali-surf-camp" }
+    ]
+  },
+  "canonicalModel": "container",
+  "options": [
+    {
+      "name": "adventure",
+      "class": "adventure",
+      "description": "Adventure trip detail tabs (Overview / Itinerary / What to Bring): underline-style tabs, borderless panels, yellow active indicator."
+    }
+  ],
+  "memberVariantIds": ["tabs", "tabs-adventure"]
+}

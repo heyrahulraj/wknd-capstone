@@ -1,0 +1,19 @@
+{
+  "variantName": "breadcrumb",
+  "baseBlock": "breadcrumb",
+  "visualCharacteristics": {
+    "purpose": "Dynamic breadcrumb trail generated from the current URL path",
+    "layout": "Single horizontal row of uppercase crumbs with yellow arrow separators"
+  },
+  "contentPattern": {
+    "structure": "No authored rows — the block is a marker; JS builds the trail from the URL (Home > ancestors > current page)"
+  },
+  "usage": {
+    "pagesUsing": [
+      { "url": "/us/en/adventures/bali-surf-camp" }
+    ]
+  },
+  "canonicalModel": "standalone",
+  "options": [],
+  "memberVariantIds": ["breadcrumb"]
+}

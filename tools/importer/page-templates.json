@@ -4,73 +4,193 @@
   },
   "templates": [
     {
+      "name": "adventures",
+      "urls": [
+        "https://wknd.site/us/en/adventures/bali-surf-camp.html"
+      ],
+      "representativeUrl": "https://wknd.site/us/en/adventures/bali-surf-camp.html",
+      "description": "Adventure detail page: top hero image, title, spec details, and content tabs",
+      "blocks": [
+        {
+          "name": "breadcrumb",
+          "instances": [
+            ".breadcrumb.cmp-breadcrumb--fixed"
+          ]
+        },
+        {
+          "name": "carousel",
+          "instances": [
+            ".carousel.cmp-carousel--mini"
+          ]
+        },
+        {
+          "name": "columns",
+          "instances": [
+            ".contentfragment.cmp-contentfragment--elements"
+          ]
+        },
+        {
+          "name": "tabs",
+          "instances": [
+            ".tabs.panelcontainer"
+          ]
+        }
+      ],
+      "sections": [
+        {
+          "id": "rc1",
+          "name": "Breadcrumb",
+          "selector": [
+            ".breadcrumb.cmp-breadcrumb--fixed"
+          ],
+          "style": null,
+          "blocks": [
+            "breadcrumb"
+          ],
+          "defaultContent": []
+        },
+        {
+          "id": "rc2",
+          "name": "Top Hero Image",
+          "selector": [
+            ".carousel.cmp-carousel--mini"
+          ],
+          "style": null,
+          "blocks": [
+            "carousel"
+          ],
+          "defaultContent": []
+        },
+        {
+          "id": "rc4",
+          "name": "Adventure Title",
+          "selector": [
+            ".title.cmp-title--underline"
+          ],
+          "style": "yellow-underline",
+          "blocks": [],
+          "defaultContent": [
+            ".title.cmp-title--underline"
+          ]
+        },
+        {
+          "id": "rc-body",
+          "name": "Adventure Body (spec + share + tabs)",
+          "selector": [
+            ".contentfragment.cmp-contentfragment--elements"
+          ],
+          "style": "adventure-body",
+          "blocks": [
+            "columns",
+            "tabs"
+          ],
+          "defaultContent": []
+        }
+      ],
+      "urlPattern": "/us/en/adventures/*"
+    },
+    {
       "name": "home",
       "urls": [
         "https://wknd.site/us/en.html"
       ],
       "representativeUrl": "https://wknd.site/us/en.html",
-      "description": "WKND homepage: hero carousel, featured article, recent articles cards, mid-page banner, and destination cards.",
-      "urlPattern": "/us/*",
+      "description": "To be named in naming step",
       "blocks": [
         {
           "name": "carousel",
-          "instances": [".carousel.cmp-carousel--hero"]
+          "instances": [
+            ".carousel.cmp-carousel--hero"
+          ]
         },
         {
           "name": "columns",
-          "instances": [".teaser.cmp-teaser--featured"]
+          "instances": [
+            ".teaser.cmp-teaser--featured"
+          ]
         },
         {
           "name": "cards",
-          "instances": [".image-list.list"]
+          "instances": [
+            ".image-list.list"
+          ]
         },
         {
           "name": "hero",
-          "instances": [".teaser.cmp-teaser--hero"]
+          "instances": [
+            ".teaser.cmp-teaser--hero"
+          ]
         }
       ],
       "sections": [
         {
           "id": "rc2",
           "name": "Hero Carousel",
-          "selector": [".carousel.cmp-carousel--hero"],
+          "selector": [
+            ".carousel.cmp-carousel--hero"
+          ],
           "style": null,
-          "blocks": ["carousel"],
+          "blocks": [
+            "carousel"
+          ],
           "defaultContent": []
         },
         {
           "id": "rc3",
           "name": "Featured Article",
-          "selector": [".teaser.cmp-teaser--featured"],
+          "selector": [
+            ".teaser.cmp-teaser--featured"
+          ],
           "style": "yellow-underline",
-          "blocks": ["columns"],
+          "blocks": [
+            "columns"
+          ],
           "defaultContent": []
         },
         {
           "id": "rc5",
           "name": "Recent Articles",
-          "selector": [".image-list.list"],
+          "selector": [
+            ".image-list.list"
+          ],
           "style": "yellow-underline, primary-cta, custom-separator",
-          "blocks": ["cards"],
-          "defaultContent": [".title.cmp-title--underline"]
+          "blocks": [
+            "cards"
+          ],
+          "defaultContent": [
+            ".title.cmp-title--underline"
+          ]
         },
         {
           "id": "rc9",
           "name": "Next Adventures / Climbing New Zealand",
-          "selector": [".teaser.cmp-teaser--hero"],
+          "selector": [
+            ".teaser.cmp-teaser--hero"
+          ],
           "style": null,
-          "blocks": ["hero"],
-          "defaultContent": [".title"]
+          "blocks": [
+            "hero"
+          ],
+          "defaultContent": [
+            ".title"
+          ]
         },
         {
           "id": "rc12",
           "name": "Where do you want to go?",
-          "selector": [".image-list.list"],
+          "selector": [
+            ".image-list.list"
+          ],
           "style": "primary-cta, custom-separator",
-          "blocks": ["cards"],
-          "defaultContent": [".title"]
+          "blocks": [
+            "cards"
+          ],
+          "defaultContent": [
+            ".title"
+          ]
         }
-      ]
+      ],
+      "urlPattern": "/us/*"
     }
   ]
 }
