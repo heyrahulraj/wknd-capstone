@@ -1,0 +1,59 @@
+.accordion .accordion-item {
+  border: 1px solid var(--brand-third, #ebebeb);
+  border-bottom: none;
+}
+
+.accordion .accordion-item:last-of-type {
+  border-bottom: 1px solid var(--brand-third, #ebebeb);
+}
+
+.accordion .accordion-item p {
+  margin-bottom: 0.8em;
+}
+
+.accordion .accordion-item summary {
+  position: relative;
+  padding: 1em 46px 1em 1em;
+  font-weight: 700;
+  cursor: pointer;
+  list-style: none;
+  overflow: auto;
+  transition: background-color 0.2s;
+}
+
+.accordion .accordion-item[open] summary,
+.accordion .accordion-item summary:focus,
+.accordion .accordion-item summary:hover {
+  background-color: var(--light-color, #f2f2f2);
+}
+
+.accordion .accordion-item summary::-webkit-details-marker {
+  display: none;
+}
+
+/* chevron indicator */
+.accordion .accordion-item summary::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: 18px;
+  width: 8px;
+  height: 8px;
+  border: 2px solid;
+  border-width: 2px 2px 0 0;
+  transform: translateY(-50%) rotate(135deg);
+  transition: transform 0.2s;
+}
+
+.accordion .accordion-item[open] summary::after {
+  transform: translateY(-70%) rotate(-45deg);
+}
+
+.accordion .accordion-item .accordion-item-body {
+  padding: 0.5em 1em 1em;
+}
+
+.accordion .accordion-item[open] .accordion-item-body {
+  border-top: 3px solid var(--brand-primary, #ffea00);
+  background-color: var(--background-color, #fff);
+}

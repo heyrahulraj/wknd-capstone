@@ -1,6 +1,26 @@
 import { createOptimizedPicture } from '../../scripts/aem.js';
 
+// Inline SVG glyphs for the social links in the `people` variant. Keyed by the
+// social network name (matched case-insensitively against the link text).
+const SOCIAL_ICONS = {
+  facebook: '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M13.5 21v-8h2.7l.4-3.1h-3.1V7.9c0-.9.25-1.5 1.55-1.5H17V3.6c-.29-.04-1.27-.13-2.4-.13-2.38 0-4 1.45-4 4.11V9.9H7.9V13h2.7v8z"/></svg>',
+  twitter: '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M22 5.9c-.7.32-1.5.53-2.3.63.83-.5 1.46-1.28 1.76-2.22-.78.46-1.64.8-2.55.98A4.02 4.02 0 0 0 12 8.94c0 .32.03.62.1.92-3.34-.17-6.3-1.77-8.28-4.2-.35.6-.55 1.28-.55 2.02 0 1.4.71 2.63 1.79 3.35-.66-.02-1.28-.2-1.82-.5v.05c0 1.95 1.39 3.58 3.23 3.95-.34.09-.7.14-1.06.14-.26 0-.51-.03-.76-.07.51 1.6 2 2.76 3.76 2.8A8.07 8.07 0 0 1 2 18.28 11.38 11.38 0 0 0 8.17 20c7.4 0 11.45-6.13 11.45-11.45v-.52A8.13 8.13 0 0 0 22 5.9z"/></svg>',
+  instagram: '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 2.16c3.2 0 3.58.01 4.85.07 1.17.05 1.8.25 2.23.41.56.22.96.48 1.38.9.42.42.68.82.9 1.38.16.42.36 1.06.41 2.23.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.05 1.17-.25 1.8-.41 2.23-.22.56-.48.96-.9 1.38-.42.42-.82.68-1.38.9-.42.16-1.06.36-2.23.41-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-1.17-.05-1.8-.25-2.23-.41a3.72 3.72 0 0 1-1.38-.9 3.72 3.72 0 0 1-.9-1.38c-.16-.42-.36-1.06-.41-2.23C2.17 15.58 2.16 15.2 2.16 12s.01-3.58.07-4.85c.05-1.17.25-1.8.41-2.23.22-.56.48-.96.9-1.38.42-.42.82-.68 1.38-.9.42-.16 1.06-.36 2.23-.41C8.42 2.17 8.8 2.16 12 2.16zm0 1.98c-3.15 0-3.52.01-4.76.07-.9.04-1.38.19-1.7.32-.43.16-.74.36-1.06.68-.32.32-.52.63-.68 1.06-.13.32-.28.8-.32 1.7-.06 1.24-.07 1.61-.07 4.76s.01 3.52.07 4.76c.04.9.19 1.38.32 1.7.16.43.36.74.68 1.06.32.32.63.52 1.06.68.32.13.8.28 1.7.32 1.24.06 1.61.07 4.76.07s3.52-.01 4.76-.07c.9-.04 1.38-.19 1.7-.32.43-.16.74-.36 1.06-.68.32-.32.52-.63.68-1.06.13-.32.28-.8.32-1.7.06-1.24.07-1.61.07-4.76s-.01-3.52-.07-4.76c-.04-.9-.19-1.38-.32-1.7a2.86 2.86 0 0 0-.68-1.06 2.86 2.86 0 0 0-1.06-.68c-.32-.13-.8-.28-1.7-.32-1.24-.06-1.61-.07-4.76-.07zm0 3.37a4.49 4.49 0 1 1 0 8.98 4.49 4.49 0 0 1 0-8.98zm0 7.4a2.91 2.91 0 1 0 0-5.82 2.91 2.91 0 0 0 0 5.82zm5.72-7.6a1.05 1.05 0 1 1-2.1 0 1.05 1.05 0 0 1 2.1 0z"/></svg>',
+};
+
+// Replace the text of a social link in the `people` variant with an inline icon
+// (keeping the network name as the accessible label).
+function decorateSocialLink(a) {
+  const key = a.textContent.trim().toLowerCase();
+  const icon = SOCIAL_ICONS[key];
+  if (!icon) return;
+  a.setAttribute('aria-label', a.textContent.trim());
+  a.classList.add('cards-social-link');
+  a.innerHTML = icon;
+}
+
 export default function decorate(block) {
+  const isPeople = block.classList.contains('people');
   /* change to ul, li */
   const ul = document.createElement('ul');
   [...block.children].forEach((row) => {
@@ -12,6 +32,30 @@ export default function decorate(block) {
       if (div.querySelector('picture')) div.className = 'cards-card-image';
       else div.className = 'cards-card-body';
     });
+
+    // people variant: turn the social links into an icon row
+    if (isPeople) {
+      const body = li.querySelector('.cards-card-body');
+      if (body) {
+        const socialLinks = [...body.querySelectorAll('a')]
+          .filter((a) => SOCIAL_ICONS[a.textContent.trim().toLowerCase()]);
+        if (socialLinks.length) {
+          const socialRow = document.createElement('p');
+          socialRow.className = 'cards-social';
+          socialLinks.forEach((a) => {
+            decorateSocialLink(a);
+            // unwrap each link from its own <p> and collect into the icon row
+            const wrapper = a.closest('p');
+            socialRow.append(a);
+            const empty = wrapper && wrapper !== socialRow
+              && !wrapper.textContent.trim() && !wrapper.children.length;
+            if (empty) wrapper.remove();
+          });
+          body.append(socialRow);
+        }
+      }
+    }
+
     ul.append(li);
   });
   ul.querySelectorAll('picture > img').forEach((img) => img.closest('picture').replaceWith(createOptimizedPicture(img.src, img.alt, false, [{ width: '750' }])));

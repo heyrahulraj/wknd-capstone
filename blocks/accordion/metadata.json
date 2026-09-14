@@ -1,0 +1,19 @@
+{
+  "variantName": "accordion",
+  "baseBlock": "accordion",
+  "visualCharacteristics": {
+    "purpose": "Collapsible list of question/answer (or label/content) pairs where clicking a label expands its panel",
+    "layout": "Vertical stack of bordered items; one row per item"
+  },
+  "contentPattern": {
+    "structure": "Two-column block, one row per item: cell 1 = label/question (becomes the clickable summary), cell 2 = the collapsible body/answer"
+  },
+  "usage": {
+    "pagesUsing": [
+      { "url": "/us/en/faqs" }
+    ]
+  },
+  "canonicalModel": "standalone",
+  "options": [],
+  "memberVariantIds": ["accordion"]
+}
