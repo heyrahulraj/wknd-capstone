@@ -1,17 +1,25 @@
 /**
  * Adventure list — a dynamic, filterable grid of adventure cards.
  *
- * Source of pages (in priority order):
- *   1. /us/en/query-index.json (default EDS index) filtered to /adventures/*,
- *   2. authored links inside the block (fallback when no index is published).
+ * Two authoring modes:
  *
- * For each page it fetches the page's `.plain.html` and reads the image,
- * description, and the Activity value (from the `columns spec` block) to build
- * a card and its activity tag. Filter tabs are auto-derived from the distinct
- * activity values found.
+ *   Default (`adventure-list`): the block lists the adventure pages linked
+ *   inside it (or, when a query-index is published, every page under
+ *   /us/en/adventures/). One row per authored link.
+ *
+ *   `children` variant (`adventure-list children`): the block holds a single
+ *   parent page path; it lists that parent's DIRECT child pages, discovered
+ *   from the query-index by path prefix. No per-page links are authored. If the
+ *   query-index is unavailable or has no children, the block renders nothing
+ *   (there is intentionally no authored-link fallback for this variant).
+ *
+ * For each page it reads the image, title, description, and Activity — from the
+ * query-index columns when present, otherwise by fetching the page's
+ * `.plain.html`. Filter tabs are auto-derived from the distinct activities.
  */
 
 const ADVENTURES_PREFIX = '/us/en/adventures/';
+const QUERY_INDEX_PATHS = ['/us/en/query-index.json', '/query-index.json'];
 
 /** Normalise a path: drop `/content` preview prefix, `.html`, trailing slash. */
 function normalisePath(p) {
@@ -21,28 +29,82 @@ function normalisePath(p) {
     .replace(/\/$/, '');
 }
 
-/** Collect candidate adventure page paths from the query-index, else authored links. */
+/** Fetch the query-index rows from the first location that resolves. */
+async function fetchQueryIndex() {
+  for (let i = 0; i < QUERY_INDEX_PATHS.length; i += 1) {
+    try {
+      /* eslint-disable no-await-in-loop */
+      const resp = await fetch(QUERY_INDEX_PATHS[i]);
+      if (resp.ok) {
+        const { data = [] } = await resp.json();
+        if (data.length) return data;
+      }
+      /* eslint-enable no-await-in-loop */
+    } catch (e) {
+      // try the next location
+    }
+  }
+  return [];
+}
+
+/** Read the authored parent path from the block (anchor href or plain text). */
+function readParentPath(block) {
+  const link = block.querySelector('a[href]');
+  const raw = link
+    ? new URL(link.href, window.location.origin).pathname
+    : (block.textContent || '').trim();
+  return raw ? normalisePath(raw) : '';
+}
+
+/** True when `path` is a direct child of `parent` (one segment below, not parent itself). */
+function isDirectChild(path, parent) {
+  if (!path.startsWith(`${parent}/`)) return false;
+  const rest = path.slice(parent.length + 1);
+  return rest.length > 0 && !rest.includes('/');
+}
+
+/**
+ * `children` variant: collect the parent's direct child paths from the
+ * query-index only. Returns [] (→ empty render) when the index is unavailable
+ * or has no children — no authored-link fallback by design.
+ */
+async function collectChildPaths(block) {
+  const parent = readParentPath(block);
+  if (!parent) return { paths: [], rows: [] };
+
+  const data = await fetchQueryIndex();
+  const rows = data.filter((r) => isDirectChild(normalisePath(r.path || ''), parent));
+  const paths = [...new Set(rows.map((r) => normalisePath(r.path)))];
+  return { paths, rows };
+}
+
+/** Default mode: collect adventure page paths from the query-index, else authored links. */
 async function collectPagePaths(block) {
-  // authored links (fallback source, also the reliable path locally)
   const authored = [...block.querySelectorAll('a[href]')]
     .map((a) => normalisePath(new URL(a.href, window.location.origin).pathname))
     .filter((p) => p.startsWith(ADVENTURES_PREFIX));
 
-  // try the default query-index
-  try {
-    const resp = await fetch('/us/en/query-index.json');
-    if (resp.ok) {
-      const { data = [] } = await resp.json();
-      const indexed = data
-        .map((r) => normalisePath(r.path || ''))
-        .filter((p) => p.startsWith(ADVENTURES_PREFIX) && p !== normalisePath('/us/en/adventures'));
-      if (indexed.length) return [...new Set(indexed)];
-    }
-  } catch (e) {
-    // ignore — fall back to authored links
-  }
+  const data = await fetchQueryIndex();
+  const indexed = data
+    .map((r) => normalisePath(r.path || ''))
+    .filter((p) => p.startsWith(ADVENTURES_PREFIX) && p !== normalisePath('/us/en/adventures'));
+  if (indexed.length) return [...new Set(indexed)];
 
   return [...new Set(authored)];
+}
+
+/** Build card data from a query-index row (used when the index exposes the fields). */
+function cardFromIndexRow(row) {
+  const path = normalisePath(row.path || '');
+  const title = (row.title || '').trim();
+  const activity = (row.activity || '').trim();
+  const desc = (row.description || '').trim();
+  const imgSrc = row.image || '';
+  // Consider the row "complete enough" only when it has a title; without it the
+  // card is meaningless, so the caller falls back to fetching the page.
+  return {
+    path, title, activity, desc, imgSrc, imgAlt: title,
+  };
 }
 
 /** Fetch one page's plain HTML and extract card data (title, image, desc, activity). */
@@ -94,6 +156,19 @@ async function fetchCardData(path) {
   } catch (e) {
     return null;
   }
+}
+
+/**
+ * Resolve card data for a path, preferring the query-index row when it carries
+ * the needed fields (title + activity), otherwise fetching the page's HTML.
+ */
+async function resolveCard(path, rowByPath) {
+  const row = rowByPath.get(path);
+  if (row) {
+    const card = cardFromIndexRow(row);
+    if (card.title && card.activity) return card;
+  }
+  return fetchCardData(path);
 }
 
 /** Build one card element. */
@@ -151,17 +226,8 @@ function buildTabs(activities, onSelect) {
   return nav;
 }
 
-export default async function decorate(block) {
-  const paths = await collectPagePaths(block);
-  block.replaceChildren();
-  if (!paths.length) return;
-
-  const cards = (await Promise.all(paths.map(fetchCardData)))
-    .filter(Boolean)
-    .filter((c) => c.title)
-    .sort((a, b) => a.title.localeCompare(b.title));
-  if (!cards.length) return;
-
+/** Render the filter tabs + card grid from resolved card data into the block. */
+function renderList(block, cards) {
   const grid = document.createElement('ul');
   grid.className = 'adventure-list-grid';
   const cardEls = cards.map((c) => {
@@ -181,4 +247,31 @@ export default async function decorate(block) {
   });
 
   block.append(filters, grid);
+}
+
+export default async function decorate(block) {
+  const isChildren = block.classList.contains('children');
+
+  // Gather candidate paths (and any query-index rows) per mode.
+  let paths = [];
+  let rows = [];
+  if (isChildren) {
+    ({ paths, rows } = await collectChildPaths(block));
+  } else {
+    paths = await collectPagePaths(block);
+  }
+
+  block.replaceChildren();
+  // children variant: no children (or no index) → render nothing, by design.
+  if (!paths.length) return;
+
+  const rowByPath = new Map(rows.map((r) => [normalisePath(r.path || ''), r]));
+
+  const cards = (await Promise.all(paths.map((p) => resolveCard(p, rowByPath))))
+    .filter(Boolean)
+    .filter((c) => c.title)
+    .sort((a, b) => a.title.localeCompare(b.title));
+  if (!cards.length) return;
+
+  renderList(block, cards);
 }

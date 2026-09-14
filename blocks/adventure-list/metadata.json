@@ -6,7 +6,7 @@
     "layout": "Row of activity filter tabs above a responsive card grid"
   },
   "contentPattern": {
-    "structure": "Authored as a marker block containing links to the adventure pages (or empty when a query-index is published); cards + filter tabs are built at render time from each page's Activity"
+    "structure": "Default: a marker block containing links to the adventure pages (or empty when a query-index is published). `children` variant: a single cell holding a parent page path; the block lists that parent's direct child pages from the query-index. Cards + filter tabs are built at render time from each page's Activity"
   },
   "usage": {
     "pagesUsing": [
@@ -14,6 +14,11 @@
     ]
   },
   "canonicalModel": "standalone",
-  "options": [],
-  "memberVariantIds": ["adventure-list"]
+  "options": [
+    {
+      "name": "children",
+      "description": "List the direct child pages of an authored parent path (discovered via the query-index by path prefix) instead of authoring individual links. Renders nothing when the query-index is unavailable or the parent has no children."
+    }
+  ],
+  "memberVariantIds": ["adventure-list", "adventure-list-children"]
 }
