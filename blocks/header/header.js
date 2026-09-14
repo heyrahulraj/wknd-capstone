@@ -118,6 +118,34 @@ function toggleMenu(nav, forceExpanded = null) {
 }
 
 /**
+ * Marks the nav-sections list item whose link points at the current page as
+ * active (adds `.nav-active` to the `<li>` and aria-current to the link), so
+ * the active link can be highlighted. Paths are compared normalised — the
+ * `/content` preview prefix and any `.html` extension / trailing slash removed.
+ * @param {Element} section The nav-sections element
+ */
+function markActiveNavLink(section) {
+  const normalise = (p) => p
+    .replace(/^\/content/, '')
+    .replace(/\.html$/, '')
+    .replace(/\/$/, '') || '/';
+  const current = normalise(window.location.pathname);
+  section.querySelectorAll('li a[href]').forEach((a) => {
+    let linkPath;
+    try {
+      linkPath = normalise(new URL(a.href, window.location.origin).pathname);
+    } catch (e) {
+      return;
+    }
+    if (linkPath === current) {
+      a.setAttribute('aria-current', 'page');
+      const li = a.closest('li');
+      if (li) li.classList.add('nav-active');
+    }
+  });
+}
+
+/**
  * loads and decorates the header nav
  * @param {Element} block The header block element
  */
@@ -148,7 +176,10 @@ export default async function decorate(block) {
   }
 
   const navSections = nav.querySelector('.nav-sections');
-  if (navSections) buildSearch(navSections);
+  if (navSections) {
+    buildSearch(navSections);
+    markActiveNavLink(navSections);
+  }
 
   // move the search out of the (mobile-drawer) sections into the main bar so it
   // stays visible at all breakpoints, matching the source

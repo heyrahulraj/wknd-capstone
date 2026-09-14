@@ -223,6 +223,11 @@ header nav .nav-sections li {
   border-bottom: 1px solid rgb(58 58 58);
 }
 
+header nav .nav-sections li:hover,
+header nav .nav-sections li.nav-active {
+  background-color: var(--brand-primary, #ffea00);
+}
+
 header nav .nav-sections a:any-link {
   display: block;
   width: 100%;
@@ -235,7 +240,6 @@ header nav .nav-sections a:any-link {
 }
 
 header nav .nav-sections a:hover {
-  background-color: rgb(58 58 58);
   color: rgb(255 255 255);
 }
 
@@ -410,13 +414,21 @@ header nav[aria-expanded='true'] .nav-hamburger-icon::after {
   header nav .nav-sections ul {
     flex-direction: row;
     align-items: center;
-    gap: 32px;
     width: auto;
   }
 
   header nav .nav-sections li {
     width: auto;
+    padding: 0.5rem 1rem;
+    border: none;
     border-bottom: 0;
+    border-color: inherit;
+    color: #fff;
+  }
+
+  /* active link: the nav item for the current page gets the yellow chip */
+  header nav .nav-sections li.nav-active {
+    background-color: var(--brand-primary, #ffea00);
   }
 
   header nav .nav-sections a:any-link {
