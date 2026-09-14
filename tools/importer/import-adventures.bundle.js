@@ -257,8 +257,18 @@ var CustomImportScript = (() => {
       WebImporter.rules.adjustImageUrls(main, url, params.originalURL);
       const activity = main.dataset.activity || "";
       if (activity) {
-        const metaBlock = WebImporter.Blocks.createBlock(document2, { name: "Metadata", cells: { activity } });
-        main.append(metaBlock);
+        const metaTable = [...main.querySelectorAll("table")].find(
+          (t) => { const c = t.querySelector("th, td"); return c && /^metadata$/i.test(c.textContent.trim()); }
+        );
+        if (metaTable) {
+          const tr = document2.createElement("tr");
+          const key = document2.createElement("td");
+          key.textContent = "activity";
+          const val = document2.createElement("td");
+          val.textContent = activity;
+          tr.append(key, val);
+          (metaTable.querySelector("tbody") || metaTable).append(tr);
+        }
       }
       const rawPath = new URL(params.originalURL).pathname.replace(/\/$/, "").replace(/\.html?$/, "");
       const path = WebImporter.FileUtils.sanitizePath(rawPath === "" ? "/index" : rawPath);

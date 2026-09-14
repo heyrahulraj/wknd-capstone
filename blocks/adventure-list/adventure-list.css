@@ -67,6 +67,13 @@
   min-width: 0;
 }
 
+/* the class-based `display: flex` above outranks the [hidden] attribute's
+   default `display: none`, so filtered-out cards would stay visible — restore
+   hiding explicitly for cards the filter marks hidden */
+.adventure-card[hidden] {
+  display: none;
+}
+
 .adventure-card-image {
   display: block;
   line-height: 0;
