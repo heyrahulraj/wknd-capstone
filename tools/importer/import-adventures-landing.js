@@ -4,17 +4,20 @@
 // PARSER IMPORTS (adventures landing template)
 import breadcrumbParser from './parsers/breadcrumb.js';
 import introParser from './parsers/adventures-intro.js';
-import adventureListParser from './parsers/adventure-list.js';
+import cardsDynamicParser from './parsers/cards-dynamic.js';
 
 // TRANSFORMER IMPORTS
 import cleanupTransformer from './transformers/wknd-cleanup.js';
 import sectionsTransformer from './transformers/wknd-sections.js';
 
 // PARSER REGISTRY - keys match page-templates.json block names
+// "Current Adventures" is the index-driven cards (adventures) variant: it lists
+// every /us/en/adventures/* page from the query index and renders activity
+// filter tabs, so publishing an adventure updates the listing with no edit.
 const parsers = {
   breadcrumb: breadcrumbParser,
   carousel: introParser,
-  'adventure-list': adventureListParser,
+  cards: (element, ctx) => cardsDynamicParser(element, ctx, { variant: 'adventures', filter: 'activity' }),
 };
 
 // PAGE TEMPLATE CONFIGURATION - Embedded (adventures landing template)
@@ -27,7 +30,7 @@ const PAGE_TEMPLATE = {
   blocks: [
     { name: 'breadcrumb', instances: ['.breadcrumb.cmp-breadcrumb--fixed'] },
     { name: 'carousel', instances: ['.teaser.cmp-teaser--hero'] },
-    { name: 'adventure-list', instances: ['.image-list.list'] },
+    { name: 'cards', instances: ['.image-list.list'] },
   ],
   sections: [
     {
@@ -59,7 +62,7 @@ const PAGE_TEMPLATE = {
       name: 'Current Adventures',
       selector: ['.title.cmp-title--underline'],
       style: 'yellow-underline',
-      blocks: ['adventure-list'],
+      blocks: ['cards'],
       defaultContent: ['.title.cmp-title--underline'],
     },
   ],
@@ -104,12 +107,20 @@ export default {
     executeTransformers('beforeTransform', main, payload);
 
     // drop the source's static tab labels (All/Climbing/Cycling/…) — the
-    // adventure-list block renders its own dynamic activity filter tabs
+    // cards (adventures) block renders its own dynamic activity filter tabs
     WebImporter.DOMUtils.remove(main, ['.cmp-tabs__tablist']);
 
     const pageBlocks = findBlocksOnPage(document, PAGE_TEMPLATE);
+    // the source repeats .image-list.list per activity tab; the dynamic cards
+    // block is index-driven, so only the FIRST match becomes the block and the
+    // rest are dropped (one listing, not one per tab).
+    const parsedOnce = new Set();
     pageBlocks.forEach((block) => {
       if (!block.element.parentNode) return;
+      if (block.name === 'cards') {
+        if (parsedOnce.has('cards')) { block.element.remove(); return; }
+        parsedOnce.add('cards');
+      }
       const parser = parsers[block.name];
       if (parser) {
         try {

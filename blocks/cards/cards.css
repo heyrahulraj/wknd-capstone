@@ -185,3 +185,43 @@
     gap: 48px 24px;
   }
 }
+
+/* ---- Variant: adventures (index-driven grid + activity filter tabs) ---- */
+
+/* Ported from the retired adventure-list block. The grid itself reuses the
+   .cards.article layout; these rules add the filter-tab row and the hidden
+   toggle used when filtering by activity. */
+
+.cards.adventures .cards-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  margin-bottom: 32px;
+  border-bottom: 1px solid #dadada;
+}
+
+.cards.adventures .cards-filters button {
+  margin: 0;
+  padding: 12px 0;
+  border: 0;
+  background-color: transparent;
+  color: var(--text-color);
+  font-family: var(--body-font-family);
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+}
+
+/* active filter: solid dark chip with white text, matching tabs (adventure) */
+.cards.adventures .cards-filters button[aria-pressed='true'] {
+  padding: 0.5rem 1rem;
+  background-color: #202020;
+  color: #fff;
+}
+
+/* filtered-out cards: the [hidden] attribute must win over the grid item */
+.cards.adventures > ul > li[hidden] {
+  display: none;
+}

@@ -20,7 +20,7 @@
           "instances": [".teaser.cmp-teaser--hero"]
         },
         {
-          "name": "adventure-list",
+          "name": "cards",
           "instances": [".image-list.list"]
         }
       ],
@@ -54,7 +54,7 @@
           "name": "Current Adventures",
           "selector": [".title.cmp-title--underline"],
           "style": "yellow-underline",
-          "blocks": ["adventure-list"],
+          "blocks": ["cards"],
           "defaultContent": [".title.cmp-title--underline"]
         }
       ],
