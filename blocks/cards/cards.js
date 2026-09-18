@@ -225,4 +225,4 @@ export default function decorate(block) {
   block.replaceChildren(ul);
 }
 
-/* index-driven variants: dynamic (home/magazine) + adventures (filtered). */
+/* index-driven cards variants: dynamic (home, magazine) and adventures (activity-filtered). */
