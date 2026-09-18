@@ -1,4 +1,5 @@
 import { createOptimizedPicture } from '../../scripts/aem.js';
+import { queryPages, normalisePath } from '../../scripts/query-index.js';
 
 // Inline SVG glyphs for the social links in the `people` variant. Keyed by the
 // social network name (matched case-insensitively against the link text).
@@ -19,7 +20,105 @@ function decorateSocialLink(a) {
   a.innerHTML = icon;
 }
 
+/**
+ * Read the `dynamic` variant's config from the authored block. The block holds
+ * a single cell with the parent path prefix (link or text), optionally followed
+ * by `| limit` and/or `| category`, e.g. `/us/en/magazine | 4`.
+ */
+function readDynamicConfig(block) {
+  const link = block.querySelector('a[href]');
+  const raw = (link
+    ? new URL(link.href, window.location.origin).pathname
+    : (block.textContent || '')).trim();
+  if (!raw) return null;
+  const [prefixRaw, ...rest] = raw.split('|').map((s) => s.trim());
+  const prefix = normalisePath(prefixRaw);
+  if (!prefix) return null;
+  let limit;
+  let category;
+  rest.forEach((token) => {
+    if (/^\d+$/.test(token)) limit = Number(token);
+    else if (token) category = token;
+  });
+  return { prefix, limit, category };
+}
+
+/** Build one article-style card <li> from a query-index row. */
+function buildDynamicCard(row) {
+  const path = normalisePath(row.path || '');
+  const title = (row.title || '').trim();
+
+  const li = document.createElement('li');
+
+  const media = document.createElement('div');
+  media.className = 'cards-card-image';
+  if (row.image) {
+    const imgLink = document.createElement('a');
+    imgLink.href = path;
+    const picture = document.createElement('picture');
+    const img = document.createElement('img');
+    img.src = row.image;
+    img.alt = title;
+    img.loading = 'lazy';
+    picture.append(img);
+    imgLink.append(picture);
+    media.append(imgLink);
+  }
+  const titleLink = document.createElement('a');
+  titleLink.href = path;
+  titleLink.textContent = title;
+  media.append(titleLink);
+
+  const body = document.createElement('div');
+  body.className = 'cards-card-body';
+  if (row.description) {
+    const p = document.createElement('p');
+    p.textContent = row.description.trim();
+    body.append(p);
+  }
+
+  li.append(media, body);
+  return li;
+}
+
+/**
+ * `dynamic` variant: list pages under an authored path prefix from the query
+ * index, newest first, capped to an optional limit. Renders the same markup as
+ * the `article` variant. The authored cell only holds the path prefix marker
+ * (never display content), so when the index is unavailable or matches nothing
+ * the block is emptied — it renders nothing rather than exposing the raw marker.
+ */
+async function decorateDynamic(block) {
+  const config = readDynamicConfig(block);
+  if (!config) {
+    block.replaceChildren();
+    return;
+  }
+
+  const rows = await queryPages({
+    prefix: config.prefix,
+    directOnly: true,
+    category: config.category,
+    limit: config.limit,
+  });
+  if (!rows.length) {
+    // no index / no matches → render nothing (don't expose the marker text)
+    block.replaceChildren();
+    return;
+  }
+
+  const ul = document.createElement('ul');
+  rows.forEach((row) => ul.append(buildDynamicCard(row)));
+  ul.querySelectorAll('picture > img').forEach((img) => img.closest('picture').replaceWith(createOptimizedPicture(img.src, img.alt, false, [{ width: '750' }])));
+  block.replaceChildren(ul);
+}
+
 export default function decorate(block) {
+  if (block.classList.contains('dynamic')) {
+    decorateDynamic(block);
+    return;
+  }
+
   const isPeople = block.classList.contains('people');
   /* change to ul, li */
   const ul = document.createElement('ul');

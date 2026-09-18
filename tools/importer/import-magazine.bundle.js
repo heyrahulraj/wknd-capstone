@@ -65,45 +65,22 @@ var CustomImportScript = (() => {
   }
 
   // tools/importer/parsers/cards.js
-  function parseCards(element, { document: document2 }) {
-    const items = Array.from(element.querySelectorAll(".cmp-image-list__item, li"));
-    const cells = [];
-    items.forEach((item) => {
-      const image = item.querySelector(".cmp-image-list__item-image img, .cmp-image img, img");
-      const titleLink = item.querySelector('.cmp-image-list__item-title-link, a[class*="title"]');
-      const imageLink = item.querySelector('.cmp-image-list__item-image-link, a[class*="image-link"]');
-      const titleTextEl = item.querySelector('.cmp-image-list__item-title, [class*="item-title"]');
-      const titleSource = titleTextEl || titleLink;
-      const titleText = titleSource ? titleSource.textContent.trim() : "";
-      const href = titleLink && titleLink.getAttribute("href") || imageLink && imageLink.getAttribute("href") || "";
-      const description = item.querySelector('.cmp-image-list__item-description, [class*="description"], p');
-      if (!image && !titleText) return;
-      const mediaCell = [];
-      if (image) {
-        if (href) {
-          const imgAnchor = document2.createElement("a");
-          imgAnchor.setAttribute("href", href);
-          imgAnchor.append(image);
-          mediaCell.push(imgAnchor);
-        } else {
-          mediaCell.push(image);
-        }
-      }
-      if (titleText) {
-        const titleAnchor = document2.createElement("a");
-        if (href) titleAnchor.setAttribute("href", href);
-        titleAnchor.textContent = titleText;
-        mediaCell.push(titleAnchor);
-      }
-      const descCell = [];
-      if (description) descCell.push(description);
-      cells.push([mediaCell, descCell]);
-    });
-    if (!cells.length) {
+  function parseCards(element, { document: document2 }, opts = {}) {
+    // index-driven marker: derive the path prefix from the list's own links and
+    // author a single cell (`prefix | limit`); cards.js builds the grid at render
+    const hrefs = [...element.querySelectorAll("a[href]")]
+      .map((a) => (a.getAttribute("href") || "").replace(/\.html?$/, ""))
+      .filter((h) => h.startsWith("/us/en/"));
+    let prefix = opts.prefix || "";
+    if (!prefix && hrefs.length) {
+      prefix = `/${hrefs[0].split("/").filter(Boolean).slice(0, 3).join("/")}`;
+    }
+    if (!prefix) {
       element.replaceWith(...element.childNodes);
       return;
     }
-    const block = WebImporter.Blocks.createBlock(document2, { name: "cards", variants: ["article"], cells });
+    const value = opts.limit ? `${prefix} | ${opts.limit}` : prefix;
+    const block = WebImporter.Blocks.createBlock(document2, { name: "cards", variants: ["article", "dynamic"], cells: [[value]] });
     element.replaceWith(block);
   }
 

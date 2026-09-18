@@ -4,7 +4,7 @@
 // PARSER IMPORTS
 import carouselParser from './parsers/carousel.js';
 import columnsParser from './parsers/columns.js';
-import cardsParser from './parsers/cards.js';
+import cardsDynamicParser from './parsers/cards-dynamic.js';
 import heroParser from './parsers/hero.js';
 
 // TRANSFORMER IMPORTS
@@ -12,10 +12,13 @@ import cleanupTransformer from './transformers/wknd-cleanup.js';
 import sectionsTransformer from './transformers/wknd-sections.js';
 
 // PARSER REGISTRY - Map block names to functions (keys match page-templates.json)
+// The home card grids are index-driven (cards article dynamic): the parser
+// derives each grid's path prefix from its own links and authors a marker cell,
+// capped to 4 newest per grid. Publishing a page updates the home with no edit.
 const parsers = {
   carousel: carouselParser,
   columns: columnsParser,
-  cards: cardsParser,
+  cards: (element, ctx) => cardsDynamicParser(element, ctx, { limit: 4 }),
   hero: heroParser,
 };
 
