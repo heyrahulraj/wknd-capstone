@@ -63,25 +63,22 @@ var CustomImportScript = (() => {
     element.replaceWith(block);
   }
 
-  // tools/importer/parsers/adventure-list.js
-  function parseAdventureList(element, { document: document2 }) {
-    if (document2.body.dataset.adventureListDone) { element.remove(); return; }
-    document2.body.dataset.adventureListDone = "true";
-    const seen = /* @__PURE__ */ new Set();
-    const cells = [];
-    document2.querySelectorAll(".image-list.list a[href], a[href]").forEach((a) => {
-      const href = a.getAttribute("href") || "";
-      if (!/\/adventures\/[^/]+\.html?$/.test(href)) return;
-      const clean = href.replace(/\.html?$/, "");
-      if (seen.has(clean)) return;
-      seen.add(clean);
-      const link = document2.createElement("a");
-      link.setAttribute("href", clean);
-      link.textContent = (a.textContent || "").trim() || clean;
-      cells.push([[link]]);
-    });
-    if (!cells.length) { element.replaceWith(...element.childNodes); return; }
-    const block = WebImporter.Blocks.createBlock(document2, { name: "adventure-list", cells });
+  // tools/importer/parsers/cards-dynamic.js (adventures variant)
+  function parseCardsDynamic(element, { document: document2 }, opts = {}) {
+    const hrefs = [...element.querySelectorAll("a[href]")]
+      .map((a) => (a.getAttribute("href") || "").replace(/\.html?$/, ""))
+      .filter((h) => h.startsWith("/us/en/"));
+    let prefix = opts.prefix || "";
+    if (!prefix && hrefs.length) {
+      prefix = `/${hrefs[0].split("/").filter(Boolean).slice(0, 3).join("/")}`;
+    }
+    if (!prefix) { element.replaceWith(...element.childNodes); return; }
+    const variant = opts.variant || "dynamic";
+    const parts = [prefix];
+    if (opts.limit) parts.push(String(opts.limit));
+    if (opts.filter) parts.push(`filter:${opts.filter}`);
+    const value = parts.join(" | ");
+    const block = WebImporter.Blocks.createBlock(document2, { name: "cards", variants: ["article", variant], cells: [[value]] });
     element.replaceWith(block);
   }
 
@@ -165,22 +162,22 @@ var CustomImportScript = (() => {
   var parsers = {
     breadcrumb: parseBreadcrumb,
     carousel: parseIntro,
-    "adventure-list": parseAdventureList
+    cards: (element, ctx) => parseCardsDynamic(element, ctx, { variant: "adventures", filter: "activity" })
   };
   var PAGE_TEMPLATE = {
     name: "adventures-landing",
-    description: "Adventures landing page: intro promo + dynamic filterable adventure listing.",
+    description: "Adventures landing page: intro promo + index-driven cards (adventures) listing.",
     urls: ["https://wknd.site/us/en/adventures.html"],
     blocks: [
       { name: "breadcrumb", instances: [".breadcrumb.cmp-breadcrumb--fixed"] },
       { name: "carousel", instances: [".teaser.cmp-teaser--hero"] },
-      { name: "adventure-list", instances: [".image-list.list"] }
+      { name: "cards", instances: [".image-list.list"] }
     ],
     sections: [
       { id: "rc1", name: "Breadcrumb", selector: [".breadcrumb.cmp-breadcrumb--fixed"], style: null, blocks: ["breadcrumb"], defaultContent: [] },
       { id: "rc2", name: "Adventures Title", selector: [".title.cmp-title--underline, .title"], style: "yellow-underline", blocks: [], defaultContent: [".title.cmp-title--underline, .title"] },
       { id: "rc3", name: "Intro Promo", selector: [".teaser.cmp-teaser--hero"], style: null, blocks: ["carousel"], defaultContent: [] },
-      { id: "rc4", name: "Current Adventures", selector: [".title.cmp-title--underline"], style: "yellow-underline", blocks: ["adventure-list"], defaultContent: [".title.cmp-title--underline"] }
+      { id: "rc4", name: "Current Adventures", selector: [".title.cmp-title--underline"], style: "yellow-underline", blocks: ["cards"], defaultContent: [".title.cmp-title--underline"] }
     ]
   };
   var transformers = [
@@ -214,8 +211,13 @@ var CustomImportScript = (() => {
       executeTransformers("beforeTransform", main, payload);
       WebImporter.DOMUtils.remove(main, [".cmp-tabs__tablist"]);
       const pageBlocks = findBlocksOnPage(document2, PAGE_TEMPLATE);
+      const parsedOnce = /* @__PURE__ */ new Set();
       pageBlocks.forEach((block) => {
         if (!block.element.parentNode) return;
+        if (block.name === "cards") {
+          if (parsedOnce.has("cards")) { block.element.remove(); return; }
+          parsedOnce.add("cards");
+        }
         const parser = parsers[block.name];
         if (parser) {
           try {

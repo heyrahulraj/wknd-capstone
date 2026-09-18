@@ -21,26 +21,64 @@ function decorateSocialLink(a) {
 }
 
 /**
- * Read the `dynamic` variant's config from the authored block. The block holds
- * a single cell with the parent path prefix (link or text), optionally followed
- * by `| limit` and/or `| category`, e.g. `/us/en/magazine | 4`.
+ * Read the dynamic config from the authored block. The block holds a single
+ * cell with the parent path prefix (link or text), optionally followed by
+ * `| limit`, `| category`, and/or `| filter:<column>`, e.g.
+ * `/us/en/magazine | 4` or `/us/en/adventures | filter:activity`.
+ *
+ * @param {Element} block
+ * @param {object} [defaults] fallbacks when the marker omits a value
+ *   (used by the `adventures` variant to default prefix + filter column).
  */
-function readDynamicConfig(block) {
+function readDynamicConfig(block, defaults = {}) {
   const link = block.querySelector('a[href]');
   const raw = (link
     ? new URL(link.href, window.location.origin).pathname
     : (block.textContent || '')).trim();
-  if (!raw) return null;
   const [prefixRaw, ...rest] = raw.split('|').map((s) => s.trim());
-  const prefix = normalisePath(prefixRaw);
+  const prefix = normalisePath(prefixRaw) || defaults.prefix || '';
   if (!prefix) return null;
   let limit;
   let category;
+  let filter = defaults.filter || '';
   rest.forEach((token) => {
+    const m = /^filter:(.+)$/i.exec(token);
     if (/^\d+$/.test(token)) limit = Number(token);
+    else if (m) filter = m[1].trim();
     else if (token) category = token;
   });
-  return { prefix, limit, category };
+  return {
+    prefix, limit, category, filter,
+  };
+}
+
+/**
+ * Build the filter-tab nav from the distinct filter values, toggling `hidden`
+ * on cards whose `data-<filter>` doesn't match. Mirrors the retired
+ * adventure-list block's markup/classes so the ported CSS applies unchanged.
+ */
+function buildFilterTabs(values, cardEls, filterKey) {
+  const nav = document.createElement('nav');
+  nav.className = 'cards-filters';
+  nav.setAttribute('aria-label', `Filter by ${filterKey}`);
+  ['All', ...values].forEach((label, i) => {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'cards-filter';
+    btn.textContent = label;
+    btn.dataset.filter = i === 0 ? '' : label;
+    btn.setAttribute('aria-pressed', i === 0 ? 'true' : 'false');
+    btn.addEventListener('click', () => {
+      nav.querySelectorAll('button').forEach((b) => b.setAttribute('aria-pressed', 'false'));
+      btn.setAttribute('aria-pressed', 'true');
+      const want = btn.dataset.filter;
+      cardEls.forEach((el) => {
+        el.hidden = !!want && el.dataset[filterKey] !== want;
+      });
+    });
+    nav.append(btn);
+  });
+  return nav;
 }
 
 /** Build one article-style card <li> from a query-index row. */
@@ -82,14 +120,21 @@ function buildDynamicCard(row) {
 }
 
 /**
- * `dynamic` variant: list pages under an authored path prefix from the query
- * index, newest first, capped to an optional limit. Renders the same markup as
- * the `article` variant. The authored cell only holds the path prefix marker
- * (never display content), so when the index is unavailable or matches nothing
- * the block is emptied — it renders nothing rather than exposing the raw marker.
+ * Index-driven variants (`dynamic`, `adventures`): list pages under an authored
+ * path prefix from the query index, newest first, capped to an optional limit.
+ * Renders the same markup as the `article` variant. The authored cell only
+ * holds the path prefix marker (never display content), so when the index is
+ * unavailable or matches nothing the block is emptied — it renders nothing
+ * rather than exposing the raw marker.
+ *
+ * When `config.filter` is set (e.g. `activity`), auto-derived filter tabs are
+ * rendered above the grid and toggle `hidden` on non-matching cards.
+ *
+ * @param {Element} block
+ * @param {object} [defaults] variant defaults for the marker (prefix/filter)
  */
-async function decorateDynamic(block) {
-  const config = readDynamicConfig(block);
+async function decorateDynamic(block, defaults = {}) {
+  const config = readDynamicConfig(block, defaults);
   if (!config) {
     block.replaceChildren();
     return;
@@ -108,12 +153,31 @@ async function decorateDynamic(block) {
   }
 
   const ul = document.createElement('ul');
-  rows.forEach((row) => ul.append(buildDynamicCard(row)));
+  const cardEls = rows.map((row) => {
+    const li = buildDynamicCard(row);
+    if (config.filter) li.dataset[config.filter] = (row[config.filter] || '').trim();
+    ul.append(li);
+    return li;
+  });
   ul.querySelectorAll('picture > img').forEach((img) => img.closest('picture').replaceWith(createOptimizedPicture(img.src, img.alt, false, [{ width: '750' }])));
+
+  // optional filter tabs (e.g. adventures by activity), auto-derived from rows
+  if (config.filter) {
+    const values = [...new Set(rows.map((r) => (r[config.filter] || '').trim()).filter(Boolean))].sort();
+    if (values.length) {
+      block.replaceChildren(buildFilterTabs(values, cardEls, config.filter), ul);
+      return;
+    }
+  }
   block.replaceChildren(ul);
 }
 
 export default function decorate(block) {
+  // adventures: index-driven grid + activity filter tabs (defaults baked in)
+  if (block.classList.contains('adventures')) {
+    decorateDynamic(block, { prefix: '/us/en/adventures', filter: 'activity' });
+    return;
+  }
   if (block.classList.contains('dynamic')) {
     decorateDynamic(block);
     return;
