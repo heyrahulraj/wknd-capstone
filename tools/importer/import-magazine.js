@@ -3,7 +3,7 @@
 
 // PARSER IMPORTS (magazine template)
 import columnsParser from './parsers/columns.js';
-import cardsParser from './parsers/cards.js';
+import cardsDynamicParser from './parsers/cards-dynamic.js';
 import cardsSecureParser from './parsers/cards-secure.js';
 
 // TRANSFORMER IMPORTS
@@ -11,9 +11,13 @@ import cleanupTransformer from './transformers/wknd-cleanup.js';
 import sectionsTransformer from './transformers/wknd-sections.js';
 
 // PARSER REGISTRY - keys match page-templates.json block names
+// "All Articles" is index-driven (cards article dynamic): the parser authors a
+// marker cell with the /us/en/magazine prefix (no limit — show all) and the
+// grid is built from the query-index at render time. "Members Only" secure
+// promos stay authored via cards-secure.
 const parsers = {
   columns: columnsParser,
-  cards: cardsParser,
+  cards: cardsDynamicParser,
   'cards-secure': cardsSecureParser,
 };
 
