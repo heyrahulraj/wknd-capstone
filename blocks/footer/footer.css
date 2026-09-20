@@ -99,6 +99,25 @@ footer .footer-credits a:any-link {
   text-decoration: underline;
 }
 
+/* mobile + tablet: logo left, nav links in a column to its right (one band);
+   social + credits stay stacked full-width below. Desktop (>=900px) unchanged. */
+@media (width < 900px) {
+  footer .footer-content {
+    grid-template-columns: auto 1fr;
+    grid-template-areas:
+      'brand nav'
+      'social social'
+      'credits credits';
+    align-items: start;
+    column-gap: 24px;
+  }
+
+  footer .footer-brand { grid-area: brand; }
+  footer .footer-nav { grid-area: nav; }
+  footer .footer-social { grid-area: social; }
+  footer .footer-credits { grid-area: credits; }
+}
+
 @media (width >= 900px) {
   footer .footer-content {
     grid-template-columns: auto 1fr auto;
