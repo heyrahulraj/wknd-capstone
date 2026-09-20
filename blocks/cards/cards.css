@@ -348,3 +348,130 @@
     grid-template-columns: repeat(3, 1fr);
   }
 }
+
+/* ---- Variant: button (right-rail "Share This Story" story buttons) ---- */
+
+.cards.button > ul {
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+.cards.button > ul > li {
+  border: 0;
+  border-left: 5px solid var(--brand-third, #ebebeb);
+  background-color: var(--background-color);
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.cards.button > ul > li:hover {
+  background-color: var(--brand-primary, #ffea00);
+  border-left-color: #000;
+}
+
+/* the "Share This Story" heading card: a plain block title, not a story button */
+.cards.button > ul > li.cards-title {
+  border-left: 0;
+  background-color: transparent;
+}
+
+.cards.button > ul > li.cards-title:hover {
+  background-color: transparent;
+}
+
+.cards.button > ul > li.cards-title h1,
+.cards.button > ul > li.cards-title h2,
+.cards.button > ul > li.cards-title h3,
+.cards.button > ul > li.cards-title h4,
+.cards.button > ul > li.cards-title h5,
+.cards.button > ul > li.cards-title h6 {
+  margin: 0;
+  font-size: 18px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* related-story date, muted under the title link */
+.cards.button .cards-button-date {
+  color: var(--text-color-muted, #6d6d6d);
+  font-size: 13px;
+}
+
+.cards.button .cards-card-body {
+  margin: 12px 16px;
+}
+
+/* stylelint-disable-next-line no-descending-specificity */
+.cards.button .cards-card-body p {
+  margin: 0 0 4px;
+}
+
+/* Download PDF call-to-action styled as a button */
+.cards.button .cards-download {
+  display: inline-block;
+  margin-top: 8px;
+  padding: 10px 18px;
+  background-color: #202020;
+  color: rgb(247 247 247);
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  text-decoration: none;
+}
+
+.cards.button .cards-download:hover {
+  text-decoration: none;
+}
+
+/* ---- Variant: people + horizontal (author bio: avatar left, socials right) ---- */
+
+.cards.people.horizontal > ul {
+  grid-template-columns: 1fr;
+  gap: 0;
+}
+
+.cards.people.horizontal > ul > li {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 24px;
+  text-align: left;
+}
+
+.cards.people.horizontal > ul > li img {
+  flex: 0 0 auto;
+}
+
+.cards.people.horizontal .cards-card-body {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: 0;
+}
+
+/* keep the dark social bar, but right-aligned inline (not full-avatar-width) */
+.cards.people.horizontal .cards-social {
+  width: auto;
+  margin: 8px 0 0;
+  padding: 12px 16px;
+  align-self: flex-start;
+}
+
+@media (width >= 600px) {
+  .cards.people.horizontal > ul {
+    grid-template-columns: 1fr;
+  }
+
+  .cards.people.horizontal .cards-card-body {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  /* socials sit at the right end of the row */
+  .cards.people.horizontal .cards-social {
+    margin: 0;
+    align-self: center;
+  }
+}

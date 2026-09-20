@@ -62,6 +62,28 @@ function decorateMemberOnlyCard(li) {
 }
 
 /**
+ * `button` variant: each card is a "story button" (title link + optional
+ * date/description, optional Download PDF). The first heading-only card is the
+ * block title ("Share This Story") — styled plain, not as a button. Style any
+ * link whose text mentions "download" as a button; leave title/date links as
+ * plain links.
+ * @param {HTMLLIElement} li
+ * @param {boolean} isFirst whether this is the first card (block title)
+ */
+function decorateButtonCard(li, isFirst) {
+  const body = li.querySelector('.cards-card-body') || li;
+  // a heading-only card acts as the block title (not a clickable story button)
+  const heading = body.querySelector('h1, h2, h3, h4, h5, h6');
+  if (isFirst && heading && !body.querySelector('a')) {
+    li.classList.add('cards-title');
+    return;
+  }
+  body.querySelectorAll('a').forEach((a) => {
+    if (/download/i.test(a.textContent)) a.classList.add('cards-download');
+  });
+}
+
+/**
  * Read the dynamic config from the authored block. The block holds a single
  * cell with the parent path prefix (link or text), optionally followed by
  * `| limit`, `| category`, and/or `| filter:<column>`, e.g.
@@ -225,10 +247,12 @@ export default function decorate(block) {
   }
 
   const isPeople = block.classList.contains('people');
+  const isHorizontal = block.classList.contains('horizontal');
   const isMemberOnly = block.classList.contains('member-only');
+  const isButton = block.classList.contains('button');
   /* change to ul, li */
   const ul = document.createElement('ul');
-  [...block.children].forEach((row) => {
+  [...block.children].forEach((row, index) => {
     const li = document.createElement('li');
     while (row.firstElementChild) li.append(row.firstElementChild);
     [...li.children].forEach((div) => {
@@ -261,11 +285,16 @@ export default function decorate(block) {
       }
     }
 
+    // button variant: mark the card body + tag any "Download PDF" link
+    if (isButton) decorateButtonCard(li, index === 0);
+
     // member-only variant: lock badge, READ MORE CTA, image moved to bottom
     if (isMemberOnly) decorateMemberOnlyCard(li);
 
     ul.append(li);
   });
+
+  if (isHorizontal) ul.classList.add('cards-horizontal');
   ul.querySelectorAll('picture > img').forEach((img) => img.closest('picture').replaceWith(createOptimizedPicture(img.src, img.alt, false, [{ width: '750' }])));
   block.replaceChildren(ul);
 }

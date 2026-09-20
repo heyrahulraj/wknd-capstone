@@ -476,3 +476,41 @@ main .default-content-wrapper p {
   line-height: 1.6;
   color: var(--text-color);
 }
+
+/* aside section: article in the main (left) column, a right-hand rail for
+   supplementary content (e.g. "Share This Story"). Mobile: stacked; desktop:
+   two columns (wide main + narrow aside). The block placed in the aside gets
+   grid-column 2; everything else (default content) stays in column 1. */
+main > .section.aside > div {
+  max-width: none;
+}
+
+@media (width >= 900px) {
+  main > .section.aside {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    column-gap: 48px;
+    align-items: start;
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 0 32px;
+  }
+
+  /* reset the boilerplate 1200px wrapper caps so wrappers fill their cells */
+  main > .section.aside > div {
+    max-width: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* default content (the article) fills the wide left column */
+  main .section.aside .default-content-wrapper {
+    grid-column: 1;
+  }
+
+  /* the cards (button) rail sits in the narrow right column */
+  main .section.aside .cards-wrapper {
+    grid-column: 2;
+    grid-row: 1 / span 99;
+  }
+}
