@@ -393,6 +393,14 @@ main .section.custom-separator .default-content-wrapper p:has(a:any-link)::after
   border-top: 1px solid #ebebeb;
 }
 
+/* member-only section: the intro paragraph has no CTA link, so draw the
+   full-width rule above the cards block (between the intro and the grid). */
+main .section.custom-separator .cards.member-only {
+  margin-top: 4rem;
+  border-top: 1px solid #ebebeb;
+  padding-top: 4rem;
+}
+
 /* adventure-body section.
    Mobile/tablet (< 900px): spec (columns) and Share sit side by side on the top
    row, with the tabs panel full width below them.

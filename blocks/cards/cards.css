@@ -225,3 +225,126 @@
 .cards.adventures > ul > li[hidden] {
   display: none;
 }
+
+/* ---- Variant: member-only (WKND "Members Only" gated promos) ----
+   Per card, top to bottom: title (+ lock badge) -> subtitle -> READ MORE
+   -> image at the bottom. All rules scoped to .cards.member-only. */
+
+/* mobile: single column (tablet -> 2, desktop -> 3 in media queries below) */
+.cards.member-only > ul {
+  grid-template-columns: repeat(1, 1fr);
+  gap: 24px;
+}
+
+.cards.member-only > ul > li {
+  position: relative;      /* anchor the lock badge */
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;        /* clip the ribbon corner */
+  border: none;
+  background-color: var(--background-color);
+}
+
+/* dim the gated card CONTENT (body + image), but NOT the lock badge, which
+   must stay fully opaque. opacity applied per-element rather than on the <ul>
+   so the .card-lock ribbon/padlock is excluded. */
+.cards.member-only .cards-card-body {
+  margin: 0 16px 16px 0;
+  opacity: 0.65;
+}
+
+.cards.member-only .cards-card-image {
+  margin-top: auto;        /* push image to the bottom of the flex column */
+  line-height: 0;
+  opacity: 0.65;
+}
+
+/* title: override the default serif/title-case/dark heading */
+.cards.member-only .cards-card-body h3 {
+  margin: 0 0 8px;
+  font-family: var(--body-font-family);
+  font-size: 20px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  color: rgb(120 120 120);
+}
+
+/* subtitle: uppercase gray */
+/* stylelint-disable-next-line no-descending-specificity */
+.cards.member-only .cards-card-body p {
+  margin: 0;
+  font-family: var(--body-font-family);
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  color: dimgray;
+}
+
+/* READ MORE button: light-gray rectangular chip, uppercase gray label */
+.cards.member-only .cards-readmore {
+  display: inline-block;
+  margin-top: 16px;
+  padding: 12px 20px;
+  border: 0;
+  border-radius: 0;
+  background-color: rgb(235 235 235);
+  color: rgb(90 90 90);
+  font-family: var(--body-font-family);
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.cards.member-only .cards-readmore:hover {
+  background-color: rgb(220 220 220);
+  text-decoration: none;
+}
+
+/* lock badge: yellow triangle ribbon (top-left corner) + black padlock on top */
+.cards.member-only .card-lock {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  width: 56px;
+  height: 56px;
+  pointer-events: none;
+}
+
+.cards.member-only .card-lock::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+  border-top: 40px solid var(--brand-primary, #ffea00);
+  border-right: 40px solid transparent;
+}
+
+.cards.member-only .card-lock svg {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  width: 20px;
+  height: 20px;
+  fill: #202020;
+}
+
+/* tablet: two columns */
+@media (width >= 600px) {
+  .cards.member-only > ul {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* desktop: three columns */
+@media (width >= 900px) {
+  .cards.member-only > ul {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
