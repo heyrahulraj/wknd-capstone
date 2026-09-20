@@ -223,11 +223,6 @@ header nav .nav-sections li {
   border-bottom: 1px solid rgb(58 58 58);
 }
 
-header nav .nav-sections li:hover,
-header nav .nav-sections li.nav-active {
-  background-color: var(--brand-primary, #ffea00);
-}
-
 header nav .nav-sections a:any-link {
   display: block;
   width: 100%;
@@ -426,7 +421,8 @@ header nav[aria-expanded='true'] .nav-hamburger-icon::after {
     color: #fff;
   }
 
-  /* active link: the nav item for the current page gets the yellow chip */
+  /* desktop only: hover + active nav item gets the yellow chip */
+  header nav .nav-sections li:hover,
   header nav .nav-sections li.nav-active {
     background-color: var(--brand-primary, #ffea00);
   }
