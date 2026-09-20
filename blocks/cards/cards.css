@@ -361,11 +361,30 @@
   border-left: 5px solid var(--brand-third, #ebebeb);
   background-color: var(--background-color);
   transition: background-color 0.2s ease, border-color 0.2s ease;
+  height: var(--list-item-height, 90pt);
+  padding: 8px 16px;
 }
 
 .cards.button > ul > li:hover {
   background-color: var(--brand-primary, #ffea00);
   border-left-color: #000;
+}
+
+/* the whole card is one clickable link (title + date), text in black */
+/* stylelint-disable-next-line no-descending-specificity */
+.cards.button > ul > li a {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
+  height: 100%;
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.cards.button .cards-button-title {
+  font-weight: 600;
 }
 
 /* the "Share This Story" heading is a plain block title above the list */
@@ -385,10 +404,16 @@
   letter-spacing: 0.04em;
 }
 
-/* related-story date, muted under the title link */
+/* related-story date, muted under the title */
 .cards.button .cards-button-date {
+  margin: 0;
   color: var(--text-color-muted, #6d6d6d);
   font-size: 13px;
+}
+
+/* keep the date muted even inside the black card link */
+.cards.button > ul > li a .cards-button-date {
+  color: var(--text-color-muted, #6d6d6d);
 }
 
 /* the PDF panel sits between the title and the story list */

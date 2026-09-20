@@ -96,7 +96,33 @@ function decorateButtonCards(block) {
   const ul = document.createElement('ul');
   stories.forEach((cell) => {
     const li = document.createElement('li');
-    while (cell.firstChild) li.append(cell.firstChild);
+    // make the whole card one link (title + date) so it's clickable end to end
+    const src = cell.querySelector('a[href]');
+    if (src) {
+      const link = document.createElement('a');
+      link.href = src.getAttribute('href');
+
+      const titleSpan = document.createElement('span');
+      titleSpan.className = 'cards-button-title';
+      titleSpan.textContent = src.textContent.trim();
+      link.append(titleSpan);
+
+      // the date is the text/paragraph that isn't the title link (classes are
+      // stripped from authored content, so match by "not the link" instead)
+      const dateText = [...cell.querySelectorAll('p, span, div')]
+        .map((el) => el.textContent.trim())
+        .find((t) => t && t !== src.textContent.trim());
+      if (dateText) {
+        const date = document.createElement('span');
+        date.className = 'cards-button-date';
+        date.textContent = dateText;
+        link.append(date);
+      }
+
+      li.append(link);
+    } else {
+      while (cell.firstChild) li.append(cell.firstChild);
+    }
     ul.append(li);
   });
 
