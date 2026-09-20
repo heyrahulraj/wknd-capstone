@@ -64,7 +64,6 @@ footer .footer-social h4 {
 
 footer .footer-social ul {
   display: flex;
-  gap: 8px;
 }
 
 footer .footer-social a:any-link {
@@ -73,7 +72,7 @@ footer .footer-social a:any-link {
   justify-content: center;
   width: 40px;
   height: 40px;
-  background-color: rgb(60 60 60);
+  background-color: rgb(235 235 235);
   color: rgb(235 235 235);
   transition: background-color 0.2s ease;
 }
@@ -90,16 +89,33 @@ footer .footer-social img {
 
 /* credits */
 footer .footer-credits {
-  border-top: 1px solid rgb(70 70 70);
   padding-top: 16px;
   font-size: 13px;
   line-height: 1.6;
-  color: rgb(200 200 200);
 }
 
 footer .footer-credits a:any-link {
   color: rgb(247 247 247);
   text-decoration: underline;
+}
+
+/* mobile + tablet: logo left, nav links in a column to its right (one band);
+   social + credits stay stacked full-width below. Desktop (>=900px) unchanged. */
+@media (width < 900px) {
+  footer .footer-content {
+    grid-template-columns: auto 1fr;
+    grid-template-areas:
+      'brand nav'
+      'social social'
+      'credits credits';
+    align-items: start;
+    column-gap: 24px;
+  }
+
+  footer .footer-brand { grid-area: brand; }
+  footer .footer-nav { grid-area: nav; }
+  footer .footer-social { grid-area: social; }
+  footer .footer-credits { grid-area: credits; }
 }
 
 @media (width >= 900px) {
@@ -126,8 +142,8 @@ footer .footer-credits a:any-link {
 
   footer .footer-nav ul {
     flex-direction: row;
-    justify-content: center;
     gap: 32px;
+    padding: 0 75px;
   }
 
   footer .footer-social h4 {
