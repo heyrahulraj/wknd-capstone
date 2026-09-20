@@ -62,7 +62,7 @@ const PAGE_TEMPLATE = {
       id: 'rc4',
       name: 'Members Only',
       selector: ['.title.cmp-title--underline'],
-      style: 'yellow-underline',
+      style: 'yellow-underline, custom-separator',
       blocks: ['cards-secure'],
       defaultContent: ['.title.cmp-title--underline', '.text'],
     },

@@ -113,7 +113,7 @@ var CustomImportScript = (() => {
       element.replaceWith(...element.childNodes);
       return;
     }
-    const block = WebImporter.Blocks.createBlock(document2, { name: "cards", variants: ["article"], cells });
+    const block = WebImporter.Blocks.createBlock(document2, { name: "cards", variants: ["member-only"], cells });
     element.replaceWith(block);
     teasers.forEach((t) => {
       if (t !== element && t.parentNode) t.remove();
@@ -213,7 +213,7 @@ var CustomImportScript = (() => {
       { id: "rc1", name: "Magazine Title", selector: [".title:not(.cmp-title--underline)", ".title"], style: null, blocks: [], defaultContent: [".title"] },
       { id: "rc2", name: "Featured Article", selector: [".teaser.cmp-teaser--featured"], style: null, blocks: ["columns"], defaultContent: [] },
       { id: "rc3", name: "All Articles", selector: [".title.cmp-title--underline"], style: "yellow-underline", blocks: ["cards"], defaultContent: [".title.cmp-title--underline"] },
-      { id: "rc4", name: "Members Only", selector: [".title.cmp-title--underline"], style: "yellow-underline", blocks: ["cards-secure"], defaultContent: [".title.cmp-title--underline", ".text"] }
+      { id: "rc4", name: "Members Only", selector: [".title.cmp-title--underline"], style: "yellow-underline, custom-separator", blocks: ["cards-secure"], defaultContent: [".title.cmp-title--underline", ".text"] }
     ]
   };
   var transformers = [
