@@ -1,0 +1,39 @@
+# Query index definition for the WKND site listings.
+#
+# NOTE: AGENTS.md marks helix-query.yaml as "retired — config lives at
+# tools.aem.live". The LIVE index is generated from the matching definition in
+# the tools.aem.live config service, which remains the source of truth. This
+# file mirrors that definition for version control / disaster recovery and PR
+# review. Editing it alone may not change the live index — update tools.aem.live
+# as well (and keep the two in sync).
+#
+# Drives /us/en/query-index.json, consumed by the index-driven cards variants
+# (dynamic on home/magazine, adventures with activity filter tabs).
+version: 1
+indices:
+  content:
+    include:
+      - /us/en/**
+    exclude:
+      - /us/en/nav
+      - /us/en/footer
+    target: /us/en/query-index.json
+    properties:
+      title:
+        select: head > meta[property="og:title"]
+        value: attribute(el, "content")
+      description:
+        select: head > meta[name="description"]
+        value: attribute(el, "content")
+      image:
+        select: head > meta[property="og:image"]
+        value: attribute(el, "content")
+      category:
+        select: none
+        value: match(path, "/us/en/([^/]+)/")
+      activity:
+        select: head > meta[name="activity"]
+        value: attribute(el, "content")
+      lastModified:
+        select: none
+        value: parseTimestamp(headers["last-modified"], "ddd, DD MMM YYYY hh:mm:ss GMT")
