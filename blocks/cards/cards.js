@@ -226,3 +226,5 @@ export default function decorate(block) {
 }
 
 /* index-driven variants: dynamic (home/magazine) + adventures (filtered). */
+
+/* code-sync refresh: re-pull adventures-aware cards.js. */
