@@ -230,8 +230,9 @@
    Per card, top to bottom: title (+ lock badge) -> subtitle -> READ MORE
    -> image at the bottom. All rules scoped to .cards.member-only. */
 
+/* mobile: single column (tablet -> 2, desktop -> 3 in media queries below) */
 .cards.member-only > ul {
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(1, 1fr);
   gap: 24px;
 }
 
@@ -240,23 +241,27 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;        /* clip the ribbon corner */
-  border: 1px solid #dadada;
+  border: none;
   background-color: var(--background-color);
 }
 
-/* body sits above the image (image is moved to the DOM end in JS) */
+/* dim the gated card CONTENT (body + image), but NOT the lock badge, which
+   must stay fully opaque. opacity applied per-element rather than on the <ul>
+   so the .card-lock ribbon/padlock is excluded. */
 .cards.member-only .cards-card-body {
-  margin: 16px;
+  margin: 0 16px 16px 0;
+  opacity: 0.65;
 }
 
 .cards.member-only .cards-card-image {
   margin-top: auto;        /* push image to the bottom of the flex column */
   line-height: 0;
+  opacity: 0.65;
 }
 
 /* title: override the default serif/title-case/dark heading */
 .cards.member-only .cards-card-body h3 {
-  margin: 24px 0 8px;
+  margin: 0 0 8px;
   font-family: var(--body-font-family);
   font-size: 20px;
   font-weight: 700;
@@ -317,8 +322,8 @@
   left: 0;
   width: 0;
   height: 0;
-  border-top: 56px solid var(--brand-primary, #ffea00);
-  border-right: 56px solid transparent;
+  border-top: 40px solid var(--brand-primary, #ffea00);
+  border-right: 40px solid transparent;
 }
 
 .cards.member-only .card-lock svg {
@@ -328,4 +333,18 @@
   width: 20px;
   height: 20px;
   fill: #202020;
+}
+
+/* tablet: two columns */
+@media (width >= 600px) {
+  .cards.member-only > ul {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* desktop: three columns */
+@media (width >= 900px) {
+  .cards.member-only > ul {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }
