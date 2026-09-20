@@ -64,7 +64,6 @@ footer .footer-social h4 {
 
 footer .footer-social ul {
   display: flex;
-  gap: 8px;
 }
 
 footer .footer-social a:any-link {
@@ -90,11 +89,9 @@ footer .footer-social img {
 
 /* credits */
 footer .footer-credits {
-  border-top: 1px solid rgb(70 70 70);
   padding-top: 16px;
   font-size: 13px;
   line-height: 1.6;
-  color: rgb(200 200 200);
 }
 
 footer .footer-credits a:any-link {
@@ -126,8 +123,8 @@ footer .footer-credits a:any-link {
 
   footer .footer-nav ul {
     flex-direction: row;
-    justify-content: center;
     gap: 32px;
+    padding: 0 75px;
   }
 
   footer .footer-social h4 {
