@@ -83,11 +83,19 @@ var CustomImportScript = (() => {
     const dl = element.querySelector('.cmp-download, .download');
     if (dl) {
       const panel = [];
-      const heading = document2.createElement("p");
-      heading.textContent = "Get the Full Story";
-      panel.push(heading);
-      dl.querySelectorAll('.cmp-download__property, .cmp-download__properties li, dl div').forEach((row) => {
-        const t = (row.textContent || "").replace(/\s+/g, " ").trim();
+      const titleText = (dl.querySelector('.cmp-download__title')?.textContent || "Download PDF").replace(/\s+/g, " ").trim();
+      const title2 = document2.createElement("p");
+      title2.textContent = titleText;
+      panel.push(title2);
+      const descText = (dl.querySelector('.cmp-download__description')?.textContent || "").replace(/\s+/g, " ").trim();
+      if (descText) {
+        const desc = document2.createElement("p");
+        desc.textContent = descText;
+        panel.push(desc);
+      }
+      dl.querySelectorAll('.cmp-download__property').forEach((row) => {
+        const value = row.querySelector('.cmp-download__property-content');
+        const t = (value ? value.textContent : row.textContent).replace(/\s+/g, " ").trim();
         if (t) {
           const p = document2.createElement("p");
           p.textContent = t;

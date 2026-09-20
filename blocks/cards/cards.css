@@ -351,6 +351,11 @@
 
 /* ---- Variant: button (right-rail "Share This Story" story buttons) ---- */
 
+/* the source renders the whole panel in uppercase */
+.cards.button {
+  text-transform: uppercase;
+}
+
 .cards.button > ul {
   grid-template-columns: 1fr;
   gap: 12px;

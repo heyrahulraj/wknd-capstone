@@ -54,21 +54,36 @@ export default function parse(element, { document }) {
     }
   });
 
-  // PDF panel — "Get the Full Story" + spec + Download PDF link
+  // PDF panel — title ("Download PDF") + description ("Get the Full Story")
+  // + the spec values (filename / size / format, values only, no labels)
+  // + the Download PDF link.
   const dl = element.querySelector('.cmp-download, .download');
   if (dl) {
     const panel = [];
-    const heading = document.createElement('p');
-    heading.textContent = 'Get the Full Story';
-    panel.push(heading);
-    dl.querySelectorAll('.cmp-download__property, .cmp-download__properties li, dl div').forEach((row) => {
-      const t = (row.textContent || '').replace(/\s+/g, ' ').trim();
+
+    const titleText = (dl.querySelector('.cmp-download__title')?.textContent || 'Download PDF').replace(/\s+/g, ' ').trim();
+    const title = document.createElement('p');
+    title.textContent = titleText;
+    panel.push(title);
+
+    const descText = (dl.querySelector('.cmp-download__description')?.textContent || '').replace(/\s+/g, ' ').trim();
+    if (descText) {
+      const desc = document.createElement('p');
+      desc.textContent = descText;
+      panel.push(desc);
+    }
+
+    // spec: emit the property VALUE only (source shows values, not the labels)
+    dl.querySelectorAll('.cmp-download__property').forEach((row) => {
+      const value = row.querySelector('.cmp-download__property-content');
+      const t = (value ? value.textContent : row.textContent).replace(/\s+/g, ' ').trim();
       if (t) {
         const p = document.createElement('p');
         p.textContent = t;
         panel.push(p);
       }
     });
+
     const pdfLink = dl.querySelector('.cmp-download__action, a[href*="coredownload"], a[href*=".pdf"]');
     if (pdfLink) {
       const a = document.createElement('a');
