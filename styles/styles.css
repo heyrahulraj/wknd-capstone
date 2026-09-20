@@ -477,6 +477,46 @@ main .default-content-wrapper p {
   color: var(--text-color);
 }
 
+/* pull-quote inside the article: grey box, serif quote, short yellow rule, then
+   the attribution paragraph (styled to read as one continuous box). */
+main .section.aside blockquote {
+  position: relative;
+  margin: 24px 0 0;
+  padding: 40px 48px 16px;
+  border: 0;
+  background-color: var(--light-color);
+}
+
+main .section.aside blockquote p {
+  margin: 0;
+  font-family: var(--heading-font-family);
+  font-size: 28px;
+  line-height: 1.3;
+  color: var(--text-color);
+}
+
+/* short yellow rule under the quote */
+main .section.aside blockquote::after {
+  content: '';
+  display: block;
+  width: 90px;
+  height: 3px;
+  margin-top: 20px;
+  background-color: var(--brand-primary, #ffea00);
+}
+
+/* the attribution paragraph continues the grey box, muted and not underlined */
+main .section.aside blockquote + p {
+  margin: 0 0 24px;
+  padding: 0 48px 40px;
+  background-color: var(--light-color);
+  color: var(--text-color-muted, #6d6d6d);
+}
+
+main .section.aside blockquote + p u {
+  text-decoration: none;
+}
+
 /* aside section: article in the main (left) column, a right-hand rail for
    supplementary content (e.g. "Share This Story"). Mobile: stacked; desktop:
    two columns (wide main + narrow aside). The block placed in the aside gets

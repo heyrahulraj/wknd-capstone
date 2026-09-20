@@ -465,6 +465,14 @@
 
 /* ---- Variant: people + horizontal (author bio: avatar left, socials right) ---- */
 
+/* match the article's content column width (not the full 1200px section) so
+   the byline lines up under the article and the name/role/socials don't spread
+   across the whole page. Left-aligned to the article's left edge. */
+.cards.people.horizontal {
+  max-width: 768px;
+  margin-right: auto;
+}
+
 .cards.people.horizontal > ul {
   grid-template-columns: 1fr;
   gap: 0;
