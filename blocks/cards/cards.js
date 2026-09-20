@@ -23,6 +23,10 @@ function decorateSocialLink(a) {
 // Solid black padlock glyph overlaid on the member-only lock ribbon.
 const LOCK_ICON = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 2a5 5 0 0 0-5 5v3H6a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7a2 2 0 0 0-2-2h-1V7a5 5 0 0 0-5-5zm3 8H9V7a3 3 0 0 1 6 0v3z"/></svg>';
 
+// Down-arrow-in-a-box glyph shown on the "Download PDF" button (button variant),
+// mirroring the source download component's icon.
+const DOWNLOAD_ICON = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 4h16v16H4z" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 7v7m0 0-3-3m3 3 3-3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"/></svg>';
+
 /**
  * `member-only` variant: decorate one card <li> for the gated "Members Only"
  * section — a lock ribbon badge (top-left), a READ MORE CTA below the subtitle,
@@ -88,6 +92,14 @@ function decorateButtonCards(block) {
     } else if (downloadLink) {
       panel = cell;
       downloadLink.classList.add('cards-download');
+      // prepend the download-arrow icon before the label text
+      const label = document.createElement('span');
+      label.className = 'cards-download-label';
+      label.textContent = downloadLink.textContent.trim();
+      const icon = document.createElement('span');
+      icon.className = 'cards-download-icon';
+      icon.innerHTML = DOWNLOAD_ICON;
+      downloadLink.replaceChildren(icon, label);
     } else {
       stories.push(cell);
     }

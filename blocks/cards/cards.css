@@ -433,7 +433,9 @@
 
 /* Download PDF call-to-action styled as a button */
 .cards.button .cards-download {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
   margin-top: 8px;
   padding: 10px 18px;
   background-color: #202020;
@@ -443,6 +445,18 @@
   text-transform: uppercase;
   letter-spacing: 0.04em;
   text-decoration: none;
+}
+
+/* the download-arrow-in-a-box icon on the button */
+.cards.button .cards-download-icon {
+  display: inline-flex;
+  width: 20px;
+  height: 20px;
+}
+
+.cards.button .cards-download-icon svg {
+  width: 100%;
+  height: 100%;
 }
 
 .cards.button .cards-download:hover {
