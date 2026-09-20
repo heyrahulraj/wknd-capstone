@@ -20,6 +20,47 @@ function decorateSocialLink(a) {
   a.innerHTML = icon;
 }
 
+// Solid black padlock glyph overlaid on the member-only lock ribbon.
+const LOCK_ICON = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 2a5 5 0 0 0-5 5v3H6a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7a2 2 0 0 0-2-2h-1V7a5 5 0 0 0-5-5zm3 8H9V7a3 3 0 0 1 6 0v3z"/></svg>';
+
+/**
+ * `member-only` variant: decorate one card <li> for the gated "Members Only"
+ * section — a lock ribbon badge (top-left), a READ MORE CTA below the subtitle,
+ * and the image moved to the bottom. Title/subtitle restyling is CSS-only.
+ * @param {HTMLLIElement} li
+ */
+function decorateMemberOnlyCard(li) {
+  // 1. lock badge (yellow ribbon in CSS, black padlock SVG on top)
+  const lock = document.createElement('span');
+  lock.className = 'card-lock';
+  lock.setAttribute('aria-hidden', 'true');
+  lock.innerHTML = LOCK_ICON;
+  li.prepend(lock);
+
+  const body = li.querySelector('.cards-card-body');
+  const image = li.querySelector('.cards-card-image');
+
+  // 2. READ MORE CTA below the subtitle: reuse an authored link if present,
+  //    otherwise an inert button (content is member-gated, no destination).
+  if (body) {
+    const link = body.querySelector('a[href]');
+    let cta;
+    if (link) {
+      cta = link;
+      cta.textContent = 'READ MORE';
+    } else {
+      cta = document.createElement('button');
+      cta.type = 'button';
+      cta.textContent = 'READ MORE';
+    }
+    cta.classList.add('cards-readmore');
+    body.append(cta);
+  }
+
+  // 3. move the image to the bottom of the card
+  if (image) li.append(image);
+}
+
 /**
  * Read the dynamic config from the authored block. The block holds a single
  * cell with the parent path prefix (link or text), optionally followed by
@@ -184,6 +225,7 @@ export default function decorate(block) {
   }
 
   const isPeople = block.classList.contains('people');
+  const isMemberOnly = block.classList.contains('member-only');
   /* change to ul, li */
   const ul = document.createElement('ul');
   [...block.children].forEach((row) => {
@@ -218,6 +260,9 @@ export default function decorate(block) {
         }
       }
     }
+
+    // member-only variant: lock badge, READ MORE CTA, image moved to bottom
+    if (isMemberOnly) decorateMemberOnlyCard(li);
 
     ul.append(li);
   });

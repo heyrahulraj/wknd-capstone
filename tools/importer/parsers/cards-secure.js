@@ -53,7 +53,7 @@ export default function parse(element, { document }) {
     return;
   }
 
-  const block = WebImporter.Blocks.createBlock(document, { name: 'cards', variants: ['article'], cells });
+  const block = WebImporter.Blocks.createBlock(document, { name: 'cards', variants: ['member-only'], cells });
 
   // Replace the first teaser with the block; drop the remaining teasers.
   element.replaceWith(block);
