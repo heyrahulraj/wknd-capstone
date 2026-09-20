@@ -62,25 +62,55 @@ function decorateMemberOnlyCard(li) {
 }
 
 /**
- * `button` variant: each card is a "story button" (title link + optional
- * date/description, optional Download PDF). The first heading-only card is the
- * block title ("Share This Story") — styled plain, not as a button. Style any
- * link whose text mentions "download" as a button; leave title/date links as
- * plain links.
- * @param {HTMLLIElement} li
- * @param {boolean} isFirst whether this is the first card (block title)
+ * `button` variant: right-rail "Share This Story" panel. Each authored row is
+ * one cell. Rows are classified and re-laid-out as direct block children in a
+ * fixed order:
+ *   1. `.cards-title`     — the heading-only card ("Share This Story")
+ *   2. `.cards-card-body` — the PDF panel (has a "Download" link)
+ *   3. `ul`               — the remaining related-story buttons (title + date)
+ * Story `<li>`s get the left border + hover-yellow highlight; the Download PDF
+ * link is styled as a dark button.
+ * @param {Element} block
  */
-function decorateButtonCard(li, isFirst) {
-  const body = li.querySelector('.cards-card-body') || li;
-  // a heading-only card acts as the block title (not a clickable story button)
-  const heading = body.querySelector('h1, h2, h3, h4, h5, h6');
-  if (isFirst && heading && !body.querySelector('a')) {
-    li.classList.add('cards-title');
-    return;
-  }
-  body.querySelectorAll('a').forEach((a) => {
-    if (/download/i.test(a.textContent)) a.classList.add('cards-download');
+function decorateButtonCards(block) {
+  const rows = [...block.children];
+  let title = null;
+  let panel = null;
+  const stories = [];
+
+  rows.forEach((row) => {
+    const cell = row.firstElementChild || row;
+    const heading = cell.querySelector('h1, h2, h3, h4, h5, h6');
+    const anchors = [...cell.querySelectorAll('a')];
+    const downloadLink = anchors.find((a) => /download/i.test(a.textContent));
+    if (heading && !anchors.length && !title) {
+      title = cell;
+    } else if (downloadLink) {
+      panel = cell;
+      downloadLink.classList.add('cards-download');
+    } else {
+      stories.push(cell);
+    }
   });
+
+  const ul = document.createElement('ul');
+  stories.forEach((cell) => {
+    const li = document.createElement('li');
+    while (cell.firstChild) li.append(cell.firstChild);
+    ul.append(li);
+  });
+
+  const children = [];
+  if (title) {
+    title.className = 'cards-title';
+    children.push(title);
+  }
+  if (panel) {
+    panel.className = 'cards-card-body';
+    children.push(panel);
+  }
+  children.push(ul);
+  block.replaceChildren(...children);
 }
 
 /**
@@ -246,13 +276,18 @@ export default function decorate(block) {
     return;
   }
 
+  // button: "Share This Story" panel — title, then PDF body, then story list
+  if (block.classList.contains('button')) {
+    decorateButtonCards(block);
+    return;
+  }
+
   const isPeople = block.classList.contains('people');
   const isHorizontal = block.classList.contains('horizontal');
   const isMemberOnly = block.classList.contains('member-only');
-  const isButton = block.classList.contains('button');
   /* change to ul, li */
   const ul = document.createElement('ul');
-  [...block.children].forEach((row, index) => {
+  [...block.children].forEach((row) => {
     const li = document.createElement('li');
     while (row.firstElementChild) li.append(row.firstElementChild);
     [...li.children].forEach((div) => {
@@ -284,9 +319,6 @@ export default function decorate(block) {
         }
       }
     }
-
-    // button variant: mark the card body + tag any "Download PDF" link
-    if (isButton) decorateButtonCard(li, index === 0);
 
     // member-only variant: lock badge, READ MORE CTA, image moved to bottom
     if (isMemberOnly) decorateMemberOnlyCard(li);

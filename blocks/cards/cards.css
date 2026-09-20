@@ -368,22 +368,17 @@
   border-left-color: #000;
 }
 
-/* the "Share This Story" heading card: a plain block title, not a story button */
-.cards.button > ul > li.cards-title {
-  border-left: 0;
-  background-color: transparent;
+/* the "Share This Story" heading is a plain block title above the list */
+.cards.button > .cards-title {
+  margin: 0 0 12px;
 }
 
-.cards.button > ul > li.cards-title:hover {
-  background-color: transparent;
-}
-
-.cards.button > ul > li.cards-title h1,
-.cards.button > ul > li.cards-title h2,
-.cards.button > ul > li.cards-title h3,
-.cards.button > ul > li.cards-title h4,
-.cards.button > ul > li.cards-title h5,
-.cards.button > ul > li.cards-title h6 {
+.cards.button > .cards-title h1,
+.cards.button > .cards-title h2,
+.cards.button > .cards-title h3,
+.cards.button > .cards-title h4,
+.cards.button > .cards-title h5,
+.cards.button > .cards-title h6 {
   margin: 0;
   font-size: 18px;
   text-transform: uppercase;
@@ -396,8 +391,9 @@
   font-size: 13px;
 }
 
-.cards.button .cards-card-body {
-  margin: 12px 16px;
+/* the PDF panel sits between the title and the story list */
+.cards.button > .cards-card-body {
+  margin: 0 0 12px;
 }
 
 /* stylelint-disable-next-line no-descending-specificity */
