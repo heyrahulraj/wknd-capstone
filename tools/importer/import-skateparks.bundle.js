@@ -226,13 +226,12 @@ var CustomImportScript = (() => {
     urls: ["https://wknd.site/us/en/magazine/guide-la-skateparks.html"],
     blocks: [
       { name: "breadcrumb", instances: [".breadcrumb.cmp-breadcrumb", ".breadcrumb"] },
-      { name: "cards-button", instances: [".cmp-layoutcontainer--sidebar"] },
-      { name: "cards-byline", instances: [".cmp-experiencefragment--stacey-roswells", ".cmp-byline"] }
+      { name: "cards-byline", instances: [".cmp-experiencefragment--stacey-roswells", ".cmp-byline"] },
+      { name: "cards-button", instances: [".cmp-layoutcontainer--sidebar"] }
     ],
     sections: [
       { id: "rc1", name: "Breadcrumb", selector: [".breadcrumb.cmp-breadcrumb", ".breadcrumb"], style: null, blocks: ["breadcrumb"], defaultContent: [] },
-      { id: "rc2", name: "Article + Share (aside)", selector: [".title:not(.cmp-title--underline):not(.cmp-title--black)", ".title"], style: "aside", blocks: ["cards-button"], defaultContent: [".title"] },
-      { id: "rc3", name: "Author Bio", selector: [".cmp-experiencefragment--stacey-roswells", ".cmp-byline"], style: null, blocks: ["cards-byline"], defaultContent: [] }
+      { id: "rc2", name: "Article + Byline + Share (aside)", selector: [".title:not(.cmp-title--underline):not(.cmp-title--black)", ".title"], style: "aside", blocks: ["cards-byline", "cards-button"], defaultContent: [".title"] }
     ]
   };
   var transformers = [transform, ...PAGE_TEMPLATE.sections && PAGE_TEMPLATE.sections.length > 1 ? [transform2] : []];
@@ -260,14 +259,8 @@ var CustomImportScript = (() => {
       const { document: document2, url, params } = payload;
       const main = document2.body;
 
-      // move the author byline after the share rail so section order is
-      // [article + share] then [byline] — BEFORE sections are cut
-      const byline = main.querySelector(".cmp-experiencefragment--stacey-roswells, .cmp-byline");
-      const rail = main.querySelector(".cmp-layoutcontainer--sidebar");
-      if (byline && rail && (byline.compareDocumentPosition(rail) & Node.DOCUMENT_POSITION_FOLLOWING) !== 0) {
-        rail.after(byline);
-      }
-
+      // source order preserved: article → byline → share rail (mobile stacks
+      // article → byline → share, matching the source)
       executeTransformers("beforeTransform", main, payload);
 
       const seen = /* @__PURE__ */ new Set();

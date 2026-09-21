@@ -525,6 +525,13 @@ main > .section.aside > div {
   max-width: none;
 }
 
+/* separator above the author byline (matches the source's thin rule) */
+main .section.aside .cards-wrapper:has(.cards.people.horizontal) {
+  margin-top: 40px;
+  padding-top: 40px;
+  border-top: 1px solid #ebebeb;
+}
+
 @media (width >= 900px) {
   main > .section.aside {
     display: grid;
@@ -543,13 +550,21 @@ main > .section.aside > div {
     padding: 0;
   }
 
-  /* default content (the article) fills the wide left column */
+  /* article fills the wide left column, row 1 */
   main .section.aside .default-content-wrapper {
     grid-column: 1;
+    grid-row: 1;
   }
 
-  /* the cards (button) rail sits in the narrow right column */
-  main .section.aside .cards-wrapper {
+  /* author byline sits below the article in the left column, row 2 */
+  main .section.aside .cards-wrapper:has(.cards.people.horizontal) {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  /* the "Share This Story" rail sits in the narrow right column */
+  /* stylelint-disable-next-line no-descending-specificity */
+  main .section.aside .cards-wrapper:has(.cards.button) {
     grid-column: 2;
     grid-row: 1 / span 99;
   }

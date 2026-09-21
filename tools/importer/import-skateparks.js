@@ -25,9 +25,13 @@ const PAGE_TEMPLATE = {
   urls: ['https://wknd.site/us/en/magazine/guide-la-skateparks.html'],
   blocks: [
     { name: 'breadcrumb', instances: ['.breadcrumb.cmp-breadcrumb', '.breadcrumb'] },
-    { name: 'cards-button', instances: ['.cmp-layoutcontainer--sidebar'] },
     { name: 'cards-byline', instances: ['.cmp-experiencefragment--stacey-roswells', '.cmp-byline'] },
+    { name: 'cards-button', instances: ['.cmp-layoutcontainer--sidebar'] },
   ],
+  // Source order (preserved): article → author byline → "Share This Story" rail.
+  // All three live in one `aside` section so mobile stacks article → byline →
+  // share (matching the source); at desktop the layout puts article + byline in
+  // the left column and the share rail in the right column.
   sections: [
     {
       id: 'rc1',
@@ -39,19 +43,11 @@ const PAGE_TEMPLATE = {
     },
     {
       id: 'rc2',
-      name: 'Article + Share (aside)',
+      name: 'Article + Byline + Share (aside)',
       selector: ['.title:not(.cmp-title--underline):not(.cmp-title--black)', '.title'],
       style: 'aside',
-      blocks: ['cards-button'],
+      blocks: ['cards-byline', 'cards-button'],
       defaultContent: ['.title'],
-    },
-    {
-      id: 'rc3',
-      name: 'Author Bio',
-      selector: ['.cmp-experiencefragment--stacey-roswells', '.cmp-byline'],
-      style: null,
-      blocks: ['cards-byline'],
-      defaultContent: [],
     },
   ],
 };
@@ -89,19 +85,9 @@ export default {
     const { document, url, params } = payload;
     const main = document.body;
 
-    // Source order is [breadcrumb][H1 + article][byline][share rail]. For the
-    // aside layout we want [article + share rail] in one section and [byline]
-    // below it — so move the byline to the very end (after the share rail)
-    // BEFORE the sections transformer cuts sections, otherwise the share rail
-    // (which follows the byline in source) lands in the byline's section.
-    const byline = main.querySelector('.cmp-experiencefragment--stacey-roswells, .cmp-byline');
-    const rail = main.querySelector('.cmp-layoutcontainer--sidebar');
-    if (byline && rail
-      && (byline.compareDocumentPosition(rail) & Node.DOCUMENT_POSITION_FOLLOWING) !== 0) {
-      // byline currently precedes the share rail → move byline after the rail
-      rail.after(byline);
-    }
-
+    // Source order is preserved: [breadcrumb][H1 + article][byline][share rail].
+    // The byline stays before the share rail so mobile stacks article → byline
+    // → share exactly like the source (with a separator above the byline).
     executeTransformers('beforeTransform', main, payload);
 
     // parse blocks (one instance each; first match wins)
