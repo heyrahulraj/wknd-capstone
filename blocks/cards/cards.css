@@ -582,7 +582,6 @@
 /* dark social strip — override the base people bar (fixed 164px width) so it
    spans its own full-width line on mobile/tablet */
 .cards.people.horizontal .cards-social {
-  flex: 1 0 100%;
   width: auto;
   display: flex;
   align-items: center;
