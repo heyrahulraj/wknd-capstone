@@ -95,6 +95,9 @@ function decorateButtonCards(block) {
       // panel title) stays a plain link. Style + iconize only the button.
       const button = downloadLinks[downloadLinks.length - 1];
       button.classList.add('cards-download');
+      // force-download the PDF (save as file) rather than navigating to it
+      const href = button.getAttribute('href') || '';
+      button.setAttribute('download', href.split('/').pop() || '');
       const label = document.createElement('span');
       label.className = 'cards-download-label';
       label.textContent = button.textContent.trim();

@@ -60,7 +60,14 @@ export default function parse(element, { document }) {
   const dl = element.querySelector('.cmp-download, .download');
   if (dl) {
     const panel = [];
-    const pdfHref = dl.querySelector('.cmp-download__action, a[href*="coredownload"], a[href*=".pdf"]')?.getAttribute('href');
+    const rawHref = dl.querySelector('.cmp-download__action, a[href*="coredownload"], a[href*=".pdf"]')?.getAttribute('href');
+    // The source href is an AEM-author DAM path
+    // (/content/dam/.../ultimateguidetolaskateparks.pdf.coredownload.pdf) that
+    // 404s on EDS. Rewrite it to the PDF hosted on the content bus alongside
+    // the page so the download actually works.
+    const pdfHref = rawHref && /coredownload/.test(rawHref)
+      ? '/us/en/magazine/la-skateparks/ultimateguidetolaskateparks.pdf'
+      : rawHref;
 
     // title ("Download PDF") — a link to the same PDF as the button
     const titleText = (dl.querySelector('.cmp-download__title')?.textContent || 'Download PDF').replace(/\s+/g, ' ').trim();
