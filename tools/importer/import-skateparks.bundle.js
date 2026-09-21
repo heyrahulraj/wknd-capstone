@@ -83,7 +83,8 @@ var CustomImportScript = (() => {
     const dl = element.querySelector('.cmp-download, .download');
     if (dl) {
       const panel = [];
-      const pdfHref = dl.querySelector('.cmp-download__action, a[href*="coredownload"], a[href*=".pdf"]')?.getAttribute("href");
+      const rawHref = dl.querySelector('.cmp-download__action, a[href*="coredownload"], a[href*=".pdf"]')?.getAttribute("href");
+      const pdfHref = rawHref && /coredownload/.test(rawHref) ? "/us/en/magazine/la-skateparks/ultimateguidetolaskateparks.pdf" : rawHref;
       const titleText = (dl.querySelector('.cmp-download__title')?.textContent || "Download PDF").replace(/\s+/g, " ").trim();
       const title2 = document2.createElement("p");
       if (pdfHref) {
