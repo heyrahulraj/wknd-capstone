@@ -395,6 +395,10 @@
 /* the "Share This Story" heading is a plain block title above the list */
 .cards.button > .cards-title {
   margin: 0 0 12px;
+  color: #202020;
+  font-family: var(--body-font-family);
+  font-size: 18px;
+  line-height: 1.5;
 }
 
 .cards.button > .cards-title h1,
@@ -429,6 +433,36 @@
 /* stylelint-disable-next-line no-descending-specificity */
 .cards.button .cards-card-body p {
   margin: 0 0 4px;
+}
+
+/* PDF panel typography (title / description / spec lines) */
+.cards.button .cards-card-body p:nth-of-type(1) {
+  margin: 0.5em 0 0;
+  font-family: var(--body-font-family);
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.cards.button .cards-card-body p:nth-of-type(2) {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+/* spec lines (filename / size / format): every paragraph from the 3rd on,
+   except the one holding the Download button */
+.cards.button .cards-card-body p:nth-of-type(n + 3):not(:has(.cards-download)) {
+  float: left;
+  margin-right: 12px;
+  color: dimgray;
+  font-size: 12px;
+  text-transform: uppercase;
+}
+
+/* clear the floated spec lines before the Download button */
+/* stylelint-disable-next-line no-descending-specificity */
+.cards.button .cards-card-body p:has(.cards-download) {
+  clear: both;
 }
 
 /* Download PDF call-to-action styled as a button */
