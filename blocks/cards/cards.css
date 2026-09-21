@@ -354,6 +354,7 @@
 /* the source renders the whole panel in uppercase */
 .cards.button {
   text-transform: uppercase;
+  padding-top: 25px;
 }
 
 .cards.button > ul {
