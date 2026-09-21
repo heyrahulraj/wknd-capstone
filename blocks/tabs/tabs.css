@@ -92,3 +92,9 @@
   border: 0;
   padding: 24px 0;
 }
+
+.tabs.adventure .tabs-panel p {
+  font-size: 18px;
+  line-height: 2.5;
+  text-align: justify;
+}

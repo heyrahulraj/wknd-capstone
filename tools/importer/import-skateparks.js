@@ -16,16 +16,25 @@ const parsers = {
   'cards-byline': cardsBylineParser,
 };
 
-// The article renders in the LEFT column; the "Share This Story" rail (.download)
-// becomes cards (button) in the RIGHT aside; the author byline (.cmp-byline)
-// becomes cards (people, horizontal) as a full-width section below.
+// Magazine article layout: the article renders in the LEFT column; the
+// "Share This Story" rail (+ optional PDF download) becomes cards (button) in
+// the RIGHT aside; the author byline becomes cards (people, horizontal).
+// The byline lives in a per-contributor experience fragment (e.g.
+// .cmp-experiencefragment--stacey-roswells), so it is matched generically by
+// excluding the shared header/footer fragments rather than by author name.
 const PAGE_TEMPLATE = {
-  name: 'skateparks-article',
-  description: 'LA Skateparks article: two-column aside layout (article + share rail) + author bio.',
-  urls: ['https://wknd.site/us/en/magazine/guide-la-skateparks.html'],
+  name: 'magazine-article',
+  description: 'WKND magazine article: two-column aside layout (article + share rail) + author bio.',
+  urls: [
+    'https://wknd.site/us/en/magazine/guide-la-skateparks.html',
+    'https://wknd.site/us/en/magazine/arctic-surfing.html',
+    'https://wknd.site/us/en/magazine/san-diego-surf.html',
+    'https://wknd.site/us/en/magazine/ski-touring.html',
+    'https://wknd.site/us/en/magazine/western-australia.html',
+  ],
   blocks: [
     { name: 'breadcrumb', instances: ['.breadcrumb.cmp-breadcrumb', '.breadcrumb'] },
-    { name: 'cards-byline', instances: ['.cmp-experiencefragment--stacey-roswells', '.cmp-byline'] },
+    { name: 'cards-byline', instances: ['.cmp-experiencefragment:not(.cmp-experiencefragment--header):not(.cmp-experiencefragment--footer)', '.cmp-byline'] },
     { name: 'cards-button', instances: ['.cmp-layoutcontainer--sidebar'] },
   ],
   // Source order (preserved): article → author byline → "Share This Story" rail.

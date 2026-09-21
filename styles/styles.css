@@ -473,13 +473,24 @@ main .section.adventure-body .tabs-wrapper {
 
 main .default-content-wrapper p {
   font-size: var(--body-font-size-s);
-  line-height: 1.6;
+  line-height: 2.5;
   color: var(--text-color);
+  text-align: justify;
 }
 
 /* article "By <author>" subtitle (h4) is uppercased */
 main .section.aside .default-content-wrapper h4 {
   text-transform: uppercase;
+}
+
+/* section subheadings (h2) inside the article get the WKND yellow underline
+   (source uses .cmp-title--underline on these; the H1 title stays plain) */
+main .section.aside .default-content-wrapper h2::after {
+  content: "";
+  display: block;
+  width: 84px;
+  padding-top: 8px;
+  border-bottom: 2px solid var(--brand-primary, #ffea00);
 }
 
 /* pull-quote inside the article: grey box, serif quote, short yellow rule, then
