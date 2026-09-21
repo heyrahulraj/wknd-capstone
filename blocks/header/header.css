@@ -10,7 +10,7 @@
    what keeps CLS low. Values match the rendered header at each breakpoint. */
 header {
   height: auto;
-  min-height: 118px;
+  min-height: 117px;
   position: sticky;
   top: 0;
   z-index: 1030;
@@ -143,7 +143,7 @@ header nav .nav-brand {
 }
 
 header nav .nav-brand img {
-  width: 128px;
+  width: 96px;
   height: auto;
 }
 
@@ -339,7 +339,7 @@ header nav[aria-expanded='true'] .nav-hamburger-icon::after {
 @media (width >= 900px) {
   /* taller header on desktop (bigger brand padding) — reserve its height too */
   header {
-    min-height: 166px;
+    min-height: 194px;
   }
 
   header nav {
