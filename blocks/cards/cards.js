@@ -355,7 +355,11 @@ export default function decorate(block) {
               && !wrapper.textContent.trim() && !wrapper.children.length;
             if (empty) wrapper.remove();
           });
-          body.append(socialRow);
+          // horizontal: the social bar is a third child of the card so it can
+          // wrap onto its own line (mobile/tablet) or sit far-right (desktop).
+          // base people: keep it inside the body (centered under the avatar).
+          if (isHorizontal) li.append(socialRow);
+          else body.append(socialRow);
         }
       }
     }

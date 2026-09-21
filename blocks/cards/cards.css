@@ -529,48 +529,98 @@
   gap: 0;
 }
 
+/* BASE / MOBILE (< 768px): avatar + name/role on the first line; the dark
+   social bar wraps onto its own line below (flex: 1 0 100%). */
 .cards.people.horizontal > ul > li {
   display: flex;
-  flex-direction: row;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 24px;
+  gap: 16px 24px;
   text-align: left;
 }
 
-.cards.people.horizontal > ul > li img {
+.cards.people.horizontal .cards-card-image {
   flex: 0 0 auto;
+}
+
+/* circular avatar */
+.cards.people.horizontal .cards-card-image img {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  object-fit: cover;
 }
 
 .cards.people.horizontal .cards-card-body {
   flex: 1 1 auto;
+  min-width: 0;
   display: flex;
   flex-direction: column;
   justify-content: center;
   margin: 0;
 }
 
-/* keep the dark social bar, but right-aligned inline (not full-avatar-width) */
-.cards.people.horizontal .cards-social {
-  width: auto;
-  margin: 8px 0 0;
-  padding: 12px 16px;
-  align-self: flex-start;
+/* name: serif heading */
+.cards.people.horizontal .cards-card-body h3 {
+  margin: 0;
+  font-family: var(--heading-font-family, georgia, "Times New Roman", serif);
+  font-size: 28px;
+  line-height: 1.1;
 }
 
-@media (width >= 600px) {
-  .cards.people.horizontal > ul {
-    grid-template-columns: 1fr;
+/* role: uppercase, muted */
+/* stylelint-disable-next-line no-descending-specificity */
+.cards.people.horizontal .cards-card-body p {
+  margin: 6px 0 0;
+  color: #6e6e6e;
+  font-size: 14px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+/* dark social strip — override the base people bar (fixed 164px width) so it
+   spans its own full-width line on mobile/tablet */
+.cards.people.horizontal .cards-social {
+  flex: 1 0 100%;
+  width: auto;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 28px;
+  margin: 0;
+  padding: 18px 24px;
+  background-color: #1d1d1d;
+}
+
+.cards.people.horizontal .cards-social-link svg {
+  width: 22px;
+  height: 22px;
+}
+
+/* TABLET (>= 768px): social bar still on its own line, sized to content */
+@media (width >= 768px) {
+  .cards.people.horizontal .cards-card-body h3 {
+    font-size: 34px;
   }
 
-  .cards.people.horizontal .cards-card-body {
-    flex-direction: row;
-    align-items: center;
+  .cards.people.horizontal .cards-social {
+    flex: 0 0 auto;
+  }
+}
+
+/* DESKTOP (>= 1024px): single row — byline left, social bar hard-right */
+@media (width >= 1024px) {
+  .cards.people.horizontal > ul > li {
+    flex-wrap: nowrap;
     justify-content: space-between;
   }
 
-  /* socials sit at the right end of the row */
+  .cards.people.horizontal .cards-card-body h3 {
+    font-size: 40px;
+  }
+
   .cards.people.horizontal .cards-social {
-    margin: 0;
-    align-self: center;
+    flex: 0 0 auto;
+    margin-left: auto;
   }
 }
