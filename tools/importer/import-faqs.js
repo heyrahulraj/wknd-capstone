@@ -23,30 +23,20 @@ const PAGE_TEMPLATE = {
   blocks: [
     { name: 'accordion', instances: ['.accordion.panelcontainer'] },
   ],
+  // Single two-column section (faq-aside): the FAQ heading + hero + intro +
+  // accordion render in the LEFT column, and the "Need more help?" contact
+  // block sits in the RIGHT aside column. The `yellow-underline` style keeps
+  // the short accent rule under the FAQs H1. CSS grids the aside content into
+  // column 2 (it is the section's last default-content wrapper) and stacks it
+  // below on mobile — so no separate section break between them.
   sections: [
     {
       id: 'rc1',
-      name: 'FAQs Intro',
+      name: 'FAQs (two-column: content + aside)',
       selector: ['.title.cmp-title--underline', '.title'],
-      style: 'yellow-underline',
-      blocks: [],
-      defaultContent: ['.title.cmp-title--underline', '.text'],
-    },
-    {
-      id: 'rc2',
-      name: 'FAQ Accordion',
-      selector: ['.accordion.panelcontainer'],
-      style: null,
+      style: 'faq-aside yellow-underline',
       blocks: ['accordion'],
-      defaultContent: [],
-    },
-    {
-      id: 'rc3',
-      name: 'Need More Help',
-      selector: ['.title:not(.cmp-title--underline)', '.title'],
-      style: null,
-      blocks: [],
-      defaultContent: ['.title', '.text'],
+      defaultContent: ['.title.cmp-title--underline', '.text', '.title:not(.cmp-title--underline)'],
     },
   ],
 };
@@ -109,6 +99,19 @@ export default {
     });
 
     executeTransformers('afterTransform', main, payload);
+
+    // Single-section page: the sections transformer only anchors Section
+    // Metadata to <hr> breaks between sections (and skips the first), so a
+    // one-section page would get no style. Emit the faq-aside style explicitly
+    // by prepending a Section Metadata block to the top of the page content.
+    const faqSection = PAGE_TEMPLATE.sections[0];
+    if (faqSection && faqSection.style) {
+      const metadataBlock = WebImporter.Blocks.createBlock(document, {
+        name: 'Section Metadata',
+        cells: { style: faqSection.style },
+      });
+      main.prepend(metadataBlock);
+    }
 
     const hr = document.createElement('hr');
     main.appendChild(hr);
