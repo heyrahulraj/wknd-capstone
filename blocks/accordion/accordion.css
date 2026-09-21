@@ -29,7 +29,7 @@
   margin: 0;
   padding-left: 0.5em;
   font-family: var(--body-font-family);
-  font-size: var(--heading-font-size-l);
+  font-size: var(--font-size-h4, 1pc);
   font-weight: var(--font-weight-bold, 600);
   text-transform: uppercase;
 }
