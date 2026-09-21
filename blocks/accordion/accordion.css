@@ -55,4 +55,5 @@
 
 .accordion .accordion-item .accordion-item-body {
   padding: 0 0 1em;
+  text-align: justify;
 }
