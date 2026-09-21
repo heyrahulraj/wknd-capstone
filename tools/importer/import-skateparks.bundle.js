@@ -128,7 +128,15 @@ var CustomImportScript = (() => {
     const image = element.querySelector('.cmp-byline__image img, .cmp-image img, img');
     const name = element.querySelector('.cmp-byline__name, h1, h2, h3, [class*="name"]');
     const role = element.querySelector('.cmp-byline__occupations, [class*="occupation"], [class*="role"]');
-    const socials = Array.from(element.querySelectorAll('a[href*="facebook"], a[href*="twitter"], a[href*="insta"]'));
+    const socialSel = ['a[href*="facebook"]', 'a[href*="twitter"]', 'a[href*="insta"]', '.cmp-button a', '.social a', 'a:has([class*="icon"])'].join(", ");
+    let socials = Array.from(element.querySelectorAll(socialSel));
+    const NETWORKS = [["facebook", "Facebook"], ["twitter", "Twitter"], ["insta", "Instagram"]];
+    const networkOf = (a) => {
+      const hay = `${a.getAttribute("href") || ""} ${a.getAttribute("aria-label") || ""} ${a.textContent} ${a.querySelector('[class*="icon"]')?.className || ""}`;
+      const m = NETWORKS.find(([k]) => new RegExp(k, "i").test(hay));
+      return m ? m[1] : null;
+    };
+    socials = socials.filter((a, i) => socials.indexOf(a) === i && networkOf(a));
     const mediaCell = [];
     if (image) mediaCell.push(image);
     const textCell = [];
@@ -142,16 +150,14 @@ var CustomImportScript = (() => {
       p.textContent = role.textContent.replace(/\s+/g, " ").trim();
       textCell.push(p);
     }
-    const labels = [["facebook", "Facebook"], ["twitter", "Twitter"], ["insta", "Instagram"]];
     const seenSocial = /* @__PURE__ */ new Set();
     socials.forEach((a) => {
-      const href = a.getAttribute("href") || "";
-      const match = labels.find(([k]) => new RegExp(k, "i").test(href) || new RegExp(k, "i").test(a.textContent));
-      if (!match || seenSocial.has(match[1])) return;
-      seenSocial.add(match[1]);
+      const network = networkOf(a);
+      if (!network || seenSocial.has(network)) return;
+      seenSocial.add(network);
       const link = document2.createElement("a");
-      link.setAttribute("href", href || "#");
-      link.textContent = match[1];
+      link.setAttribute("href", a.getAttribute("href") || "#");
+      link.textContent = network;
       const wrap = document2.createElement("p");
       wrap.append(link);
       textCell.push(wrap);
@@ -221,12 +227,18 @@ var CustomImportScript = (() => {
     "cards-byline": parseCardsByline
   };
   var PAGE_TEMPLATE = {
-    name: "skateparks-article",
-    description: "LA Skateparks article: two-column aside layout (article + share rail) + author bio.",
-    urls: ["https://wknd.site/us/en/magazine/guide-la-skateparks.html"],
+    name: "magazine-article",
+    description: "WKND magazine article: two-column aside layout (article + share rail) + author bio.",
+    urls: [
+      "https://wknd.site/us/en/magazine/guide-la-skateparks.html",
+      "https://wknd.site/us/en/magazine/arctic-surfing.html",
+      "https://wknd.site/us/en/magazine/san-diego-surf.html",
+      "https://wknd.site/us/en/magazine/ski-touring.html",
+      "https://wknd.site/us/en/magazine/western-australia.html"
+    ],
     blocks: [
       { name: "breadcrumb", instances: [".breadcrumb.cmp-breadcrumb", ".breadcrumb"] },
-      { name: "cards-byline", instances: [".cmp-experiencefragment--stacey-roswells", ".cmp-byline"] },
+      { name: "cards-byline", instances: [".cmp-experiencefragment:not(.cmp-experiencefragment--header):not(.cmp-experiencefragment--footer)", ".cmp-byline"] },
       { name: "cards-button", instances: [".cmp-layoutcontainer--sidebar"] }
     ],
     sections: [
