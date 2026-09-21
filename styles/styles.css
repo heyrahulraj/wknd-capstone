@@ -473,8 +473,9 @@ main .section.adventure-body .tabs-wrapper {
 
 main .default-content-wrapper p {
   font-size: var(--body-font-size-s);
-  line-height: 1.6;
+  line-height: 2.5;
   color: var(--text-color);
+  text-align: justify;
 }
 
 /* article "By <author>" subtitle (h4) is uppercased */
