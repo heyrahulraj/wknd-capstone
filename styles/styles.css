@@ -477,6 +477,11 @@ main .default-content-wrapper p {
   color: var(--text-color);
 }
 
+/* article "By <author>" subtitle (h4) is uppercased */
+main .section.aside .default-content-wrapper h4 {
+  text-transform: uppercase;
+}
+
 /* pull-quote inside the article: grey box, serif quote, short yellow rule, then
    the attribution paragraph (styled to read as one continuous box). */
 main .section.aside blockquote {

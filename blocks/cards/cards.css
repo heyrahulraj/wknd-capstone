@@ -560,12 +560,13 @@
   margin: 0;
 }
 
-/* name: serif heading */
+/* name: serif heading (title case — override the base people uppercase) */
 .cards.people.horizontal .cards-card-body h3 {
   margin: 0;
   font-family: var(--heading-font-family, georgia, "Times New Roman", serif);
   font-size: 28px;
   line-height: 1.1;
+  text-transform: none;
 }
 
 /* role: uppercase, muted */
