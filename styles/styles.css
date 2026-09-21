@@ -525,10 +525,11 @@ main > .section.aside > div {
   max-width: none;
 }
 
-/* separator above the author byline (matches the source's thin rule) */
+/* separator above the author byline (matches the source's thin rule);
+   mobile/tablet gets 14px side padding so it doesn't touch the screen edges */
 main .section.aside .cards-wrapper:has(.cards.people.horizontal) {
   margin-top: 40px;
-  padding-top: 40px;
+  padding: 40px 14px 0;
   border-top: 1px solid #ebebeb;
 }
 
