@@ -168,10 +168,6 @@
   fill: currentcolor;
 }
 
-.cards.people .cards-social-link:hover {
-  color: var(--brand-primary, #ffea00);
-}
-
 @media (width >= 600px) {
   .cards.people > ul {
     grid-template-columns: repeat(2, 1fr);
