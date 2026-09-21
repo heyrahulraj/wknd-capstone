@@ -1,6 +1,10 @@
 /* Breadcrumb: horizontal, uppercase trail with yellow arrow separators.
    Structural/functional only — colours inherit from brand tokens. */
 
+.breadcrumb {
+  padding-top: 30px;
+}
+
 .breadcrumb ol {
   display: flex;
   flex-wrap: wrap;

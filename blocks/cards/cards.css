@@ -348,3 +348,279 @@
     grid-template-columns: repeat(3, 1fr);
   }
 }
+
+/* ---- Variant: button (right-rail "Share This Story" story buttons) ---- */
+
+/* the source renders the whole panel in uppercase */
+.cards.button {
+  text-transform: uppercase;
+  padding-top: 25px;
+}
+
+.cards.button > ul {
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+.cards.button > ul > li {
+  border: 0;
+  border-left: 5px solid var(--brand-third, #ebebeb);
+  background-color: var(--background-color);
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+  height: var(--list-item-height, 90pt);
+  padding: 8px 16px;
+}
+
+.cards.button > ul > li:hover {
+  background-color: var(--brand-primary, #ffea00);
+  border-left-color: #000;
+}
+
+/* the whole card is one clickable link (title + date), text in black */
+/* stylelint-disable-next-line no-descending-specificity */
+.cards.button > ul > li a {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
+  height: 100%;
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.cards.button .cards-button-title {
+  font-weight: 600;
+}
+
+/* the "Share This Story" heading is a plain block title above the list */
+.cards.button > .cards-title {
+  margin: 0 0 12px;
+  color: #202020;
+  font-family: var(--body-font-family);
+  font-size: 18px;
+  line-height: 1.5;
+}
+
+.cards.button > .cards-title h1,
+.cards.button > .cards-title h2,
+.cards.button > .cards-title h3,
+.cards.button > .cards-title h4,
+.cards.button > .cards-title h5,
+.cards.button > .cards-title h6 {
+  margin: 0;
+  font-family: var(--body-font-family);
+  font-size: 18px;
+  font-weight: var(--font-weight-bold, 600);
+  line-height: 1.5;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #202020;
+}
+
+/* related-story date, muted under the title */
+.cards.button .cards-button-date {
+  margin: 0;
+  color: var(--text-color-muted, #6d6d6d);
+  font-size: 13px;
+}
+
+/* keep the date muted even inside the black card link */
+.cards.button > ul > li a .cards-button-date {
+  color: var(--text-color-muted, #6d6d6d);
+}
+
+/* the PDF panel sits between the title and the story list */
+.cards.button > .cards-card-body {
+  margin: 50px 0;
+}
+
+/* stylelint-disable-next-line no-descending-specificity */
+.cards.button .cards-card-body p {
+  margin: 0 0 4px;
+}
+
+/* PDF panel typography (title / description / spec lines) */
+.cards.button .cards-card-body p:nth-of-type(1) {
+  margin: 0.5em 0 0;
+  font-family: var(--body-font-family);
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+/* the panel title is a link to the PDF — keep the text black */
+.cards.button .cards-card-body p:nth-of-type(1) a {
+  color: #202020;
+  text-decoration: none;
+}
+
+.cards.button .cards-card-body p:nth-of-type(2) {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+/* spec lines (filename / size / format): every paragraph from the 3rd on,
+   except the one holding the Download button */
+.cards.button .cards-card-body p:nth-of-type(n + 3):not(:has(.cards-download)) {
+  float: left;
+  margin-right: 12px;
+  color: dimgray;
+  font-size: 12px;
+  text-transform: uppercase;
+}
+
+/* the format line (the spec paragraph just before the Download button)
+   drops onto its own line */
+.cards.button .cards-card-body p:nth-of-type(n + 3):has(+ p .cards-download) {
+  clear: left;
+}
+
+/* clear the floated spec lines before the Download button */
+/* stylelint-disable-next-line no-descending-specificity */
+.cards.button .cards-card-body p:has(.cards-download) {
+  clear: both;
+}
+
+/* Download PDF call-to-action styled as a button */
+.cards.button .cards-download {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 8px;
+  padding: 10px 18px;
+  background-color: #202020;
+  color: rgb(247 247 247);
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  text-decoration: none;
+}
+
+/* the download-arrow-in-a-box icon on the button */
+.cards.button .cards-download-icon {
+  display: inline-flex;
+  width: 20px;
+  height: 20px;
+}
+
+.cards.button .cards-download-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.cards.button .cards-download:hover {
+  text-decoration: none;
+}
+
+/* ---- Variant: people + horizontal (author bio: avatar left, socials right) ---- */
+
+/* match the article's content column width (not the full 1200px section) so
+   the byline lines up under the article and the name/role/socials don't spread
+   across the whole page. Left-aligned to the article's left edge. */
+.cards.people.horizontal {
+  max-width: 768px;
+  margin-right: auto;
+}
+
+.cards.people.horizontal > ul {
+  grid-template-columns: 1fr;
+  gap: 0;
+}
+
+/* BASE / MOBILE (< 768px): avatar + name/role on the first line; the dark
+   social bar wraps onto its own line below (flex: 1 0 100%). */
+.cards.people.horizontal > ul > li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px 24px;
+  text-align: left;
+}
+
+.cards.people.horizontal .cards-card-image {
+  flex: 0 0 auto;
+}
+
+/* circular avatar */
+.cards.people.horizontal .cards-card-image img {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.cards.people.horizontal .cards-card-body {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: 0;
+}
+
+/* name: serif heading (title case — override the base people uppercase) */
+.cards.people.horizontal .cards-card-body h3 {
+  margin: 0;
+  font-family: var(--heading-font-family, georgia, "Times New Roman", serif);
+  font-size: 28px;
+  line-height: 1.1;
+  text-transform: none;
+}
+
+/* role: uppercase, muted */
+/* stylelint-disable-next-line no-descending-specificity */
+.cards.people.horizontal .cards-card-body p {
+  margin: 6px 0 0;
+  color: #6e6e6e;
+  font-size: 14px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+/* dark social strip — override the base people bar (fixed 164px width) so it
+   spans its own full-width line on mobile/tablet */
+.cards.people.horizontal .cards-social {
+  width: auto;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 28px;
+  margin: 0;
+  padding: 18px 24px;
+  background-color: #1d1d1d;
+}
+
+.cards.people.horizontal .cards-social-link svg {
+  width: 22px;
+  height: 22px;
+}
+
+/* TABLET (>= 768px): social bar still on its own line, sized to content */
+@media (width >= 768px) {
+  .cards.people.horizontal .cards-card-body h3 {
+    font-size: 34px;
+  }
+
+  .cards.people.horizontal .cards-social {
+    flex: 0 0 auto;
+  }
+}
+
+/* DESKTOP (>= 1024px): single row — byline left, social bar hard-right */
+@media (width >= 1024px) {
+  .cards.people.horizontal > ul > li {
+    flex-wrap: nowrap;
+    justify-content: space-between;
+  }
+
+  .cards.people.horizontal .cards-card-body h3 {
+    font-size: 40px;
+  }
+
+  .cards.people.horizontal .cards-social {
+    flex: 0 0 auto;
+    margin-left: auto;
+  }
+}

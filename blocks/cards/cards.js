@@ -23,6 +23,10 @@ function decorateSocialLink(a) {
 // Solid black padlock glyph overlaid on the member-only lock ribbon.
 const LOCK_ICON = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 2a5 5 0 0 0-5 5v3H6a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7a2 2 0 0 0-2-2h-1V7a5 5 0 0 0-5-5zm3 8H9V7a3 3 0 0 1 6 0v3z"/></svg>';
 
+// Down-arrow-in-a-box glyph shown on the "Download PDF" button (button variant),
+// mirroring the source download component's icon.
+const DOWNLOAD_ICON = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 4h16v16H4z" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 7v7m0 0-3-3m3 3 3-3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"/></svg>';
+
 /**
  * `member-only` variant: decorate one card <li> for the gated "Members Only"
  * section — a lock ribbon badge (top-left), a READ MORE CTA below the subtitle,
@@ -59,6 +63,94 @@ function decorateMemberOnlyCard(li) {
 
   // 3. move the image to the bottom of the card
   if (image) li.append(image);
+}
+
+/**
+ * `button` variant: right-rail "Share This Story" panel. Each authored row is
+ * one cell. Rows are classified and re-laid-out as direct block children in a
+ * fixed order:
+ *   1. `.cards-title`     — the heading-only card ("Share This Story")
+ *   2. `.cards-card-body` — the PDF panel (has a "Download" link)
+ *   3. `ul`               — the remaining related-story buttons (title + date)
+ * Story `<li>`s get the left border + hover-yellow highlight; the Download PDF
+ * link is styled as a dark button.
+ * @param {Element} block
+ */
+function decorateButtonCards(block) {
+  const rows = [...block.children];
+  let title = null;
+  let panel = null;
+  const stories = [];
+
+  rows.forEach((row) => {
+    const cell = row.firstElementChild || row;
+    const heading = cell.querySelector('h1, h2, h3, h4, h5, h6');
+    const anchors = [...cell.querySelectorAll('a')];
+    const downloadLinks = anchors.filter((a) => /download/i.test(a.textContent));
+    if (heading && !anchors.length && !title) {
+      title = cell;
+    } else if (downloadLinks.length) {
+      panel = cell;
+      // the LAST "Download PDF" link is the button; any earlier one (e.g. the
+      // panel title) stays a plain link. Style + iconize only the button.
+      const button = downloadLinks[downloadLinks.length - 1];
+      button.classList.add('cards-download');
+      const label = document.createElement('span');
+      label.className = 'cards-download-label';
+      label.textContent = button.textContent.trim();
+      const icon = document.createElement('span');
+      icon.className = 'cards-download-icon';
+      icon.innerHTML = DOWNLOAD_ICON;
+      button.replaceChildren(icon, label);
+    } else {
+      stories.push(cell);
+    }
+  });
+
+  const ul = document.createElement('ul');
+  stories.forEach((cell) => {
+    const li = document.createElement('li');
+    // make the whole card one link (title + date) so it's clickable end to end
+    const src = cell.querySelector('a[href]');
+    if (src) {
+      const link = document.createElement('a');
+      link.href = src.getAttribute('href');
+
+      const titleSpan = document.createElement('span');
+      titleSpan.className = 'cards-button-title';
+      titleSpan.textContent = src.textContent.trim();
+      link.append(titleSpan);
+
+      // the date is the text/paragraph that isn't the title link (classes are
+      // stripped from authored content, so match by "not the link" instead)
+      const dateText = [...cell.querySelectorAll('p, span, div')]
+        .map((el) => el.textContent.trim())
+        .find((t) => t && t !== src.textContent.trim());
+      if (dateText) {
+        const date = document.createElement('span');
+        date.className = 'cards-button-date';
+        date.textContent = dateText;
+        link.append(date);
+      }
+
+      li.append(link);
+    } else {
+      while (cell.firstChild) li.append(cell.firstChild);
+    }
+    ul.append(li);
+  });
+
+  const children = [];
+  if (title) {
+    title.className = 'cards-title';
+    children.push(title);
+  }
+  if (panel) {
+    panel.className = 'cards-card-body';
+    children.push(panel);
+  }
+  children.push(ul);
+  block.replaceChildren(...children);
 }
 
 /**
@@ -224,7 +316,14 @@ export default function decorate(block) {
     return;
   }
 
+  // button: "Share This Story" panel — title, then PDF body, then story list
+  if (block.classList.contains('button')) {
+    decorateButtonCards(block);
+    return;
+  }
+
   const isPeople = block.classList.contains('people');
+  const isHorizontal = block.classList.contains('horizontal');
   const isMemberOnly = block.classList.contains('member-only');
   /* change to ul, li */
   const ul = document.createElement('ul');
@@ -256,7 +355,11 @@ export default function decorate(block) {
               && !wrapper.textContent.trim() && !wrapper.children.length;
             if (empty) wrapper.remove();
           });
-          body.append(socialRow);
+          // horizontal: the social bar is a third child of the card so it can
+          // wrap onto its own line (mobile/tablet) or sit far-right (desktop).
+          // base people: keep it inside the body (centered under the avatar).
+          if (isHorizontal) li.append(socialRow);
+          else body.append(socialRow);
         }
       }
     }
@@ -266,6 +369,8 @@ export default function decorate(block) {
 
     ul.append(li);
   });
+
+  if (isHorizontal) ul.classList.add('cards-horizontal');
   ul.querySelectorAll('picture > img').forEach((img) => img.closest('picture').replaceWith(createOptimizedPicture(img.src, img.alt, false, [{ width: '750' }])));
   block.replaceChildren(ul);
 }

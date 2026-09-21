@@ -476,3 +476,102 @@ main .default-content-wrapper p {
   line-height: 1.6;
   color: var(--text-color);
 }
+
+/* article "By <author>" subtitle (h4) is uppercased */
+main .section.aside .default-content-wrapper h4 {
+  text-transform: uppercase;
+}
+
+/* pull-quote inside the article: grey box, serif quote, short yellow rule, then
+   the attribution paragraph (styled to read as one continuous box). */
+main .section.aside blockquote {
+  position: relative;
+  margin: 24px 0 0;
+  padding: 40px 48px 16px;
+  border: 0;
+  background-color: var(--light-color);
+}
+
+main .section.aside blockquote p {
+  margin: 0;
+  font-family: var(--heading-font-family);
+  font-size: 28px;
+  line-height: 1.3;
+  color: var(--text-color);
+}
+
+/* short yellow rule under the quote */
+main .section.aside blockquote::after {
+  content: '';
+  display: block;
+  width: 90px;
+  height: 3px;
+  margin-top: 20px;
+  background-color: var(--brand-primary, #ffea00);
+}
+
+/* the attribution paragraph continues the grey box, muted and not underlined */
+main .section.aside blockquote + p {
+  margin: 0 0 24px;
+  padding: 0 48px 40px;
+  background-color: var(--light-color);
+  color: var(--text-color-muted, #6d6d6d);
+}
+
+main .section.aside blockquote + p u {
+  text-decoration: none;
+}
+
+/* aside section: article in the main (left) column, a right-hand rail for
+   supplementary content (e.g. "Share This Story"). Mobile: stacked; desktop:
+   two columns (wide main + narrow aside). The block placed in the aside gets
+   grid-column 2; everything else (default content) stays in column 1. */
+main > .section.aside > div {
+  max-width: none;
+}
+
+/* separator above the author byline (matches the source's thin rule);
+   mobile/tablet gets 14px side padding so it doesn't touch the screen edges */
+main .section.aside .cards-wrapper:has(.cards.people.horizontal) {
+  margin-top: 40px;
+  padding: 40px 14px 0;
+  border-top: 1px solid #ebebeb;
+}
+
+@media (width >= 900px) {
+  main > .section.aside {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    column-gap: 48px;
+    align-items: start;
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 0 32px;
+  }
+
+  /* reset the boilerplate 1200px wrapper caps so wrappers fill their cells */
+  main > .section.aside > div {
+    max-width: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* article fills the wide left column, row 1 */
+  main .section.aside .default-content-wrapper {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  /* author byline sits below the article in the left column, row 2 */
+  main .section.aside .cards-wrapper:has(.cards.people.horizontal) {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  /* the "Share This Story" rail sits in the narrow right column */
+  /* stylelint-disable-next-line no-descending-specificity */
+  main .section.aside .cards-wrapper:has(.cards.button) {
+    grid-column: 2;
+    grid-row: 1 / span 99;
+  }
+}
