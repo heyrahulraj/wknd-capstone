@@ -156,5 +156,19 @@ export default async function decorate(block) {
   container.append(slidesWrapper);
   block.prepend(container);
 
+  // hero-img variant (homepage hero): promote the first slide's heading to <h1>
+  // so the page has exactly one top-level heading (SEO + a11y). Only when the
+  // page has no <h1> yet, and preserving the heading's id (used by
+  // aria-labelledby on the slide).
+  if (block.classList.contains('hero-img') && !document.querySelector('main h1')) {
+    const firstHeading = slidesWrapper.querySelector('.carousel-slide h2, .carousel-slide h3');
+    if (firstHeading) {
+      const h1 = document.createElement('h1');
+      h1.innerHTML = firstHeading.innerHTML;
+      [...firstHeading.attributes].forEach((attr) => h1.setAttribute(attr.name, attr.value));
+      firstHeading.replaceWith(h1);
+    }
+  }
+
   bindEvents(block);
 }
