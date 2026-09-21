@@ -24,6 +24,16 @@
   overflow: auto;
 }
 
+/* question heading inside the summary: sans-serif, bold, uppercase */
+.accordion .accordion-item summary h3 {
+  margin: 0;
+  padding-left: 0.5em;
+  font-family: var(--body-font-family);
+  font-size: var(--heading-font-size-l);
+  font-weight: var(--font-weight-bold, 600);
+  text-transform: uppercase;
+}
+
 .accordion .accordion-item summary::-webkit-details-marker {
   display: none;
 }
