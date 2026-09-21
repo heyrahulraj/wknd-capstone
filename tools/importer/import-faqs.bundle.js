@@ -158,7 +158,7 @@ var CustomImportScript = (() => {
       { name: "accordion", instances: [".accordion.panelcontainer"] }
     ],
     sections: [
-      { id: "rc1", name: "FAQs (two-column: content + aside)", selector: [".title.cmp-title--underline", ".title"], style: "faq-aside yellow-underline", blocks: ["accordion"], defaultContent: [".title.cmp-title--underline", ".text", ".title:not(.cmp-title--underline)"] }
+      { id: "rc1", name: "FAQs (two-column: content + aside)", selector: [".title.cmp-title--underline", ".title"], style: "faq-aside, yellow-underline", blocks: ["accordion"], defaultContent: [".title.cmp-title--underline", ".text", ".title:not(.cmp-title--underline)"] }
     ]
   };
   var transformers = [

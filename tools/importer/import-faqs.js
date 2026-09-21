@@ -34,7 +34,7 @@ const PAGE_TEMPLATE = {
       id: 'rc1',
       name: 'FAQs (two-column: content + aside)',
       selector: ['.title.cmp-title--underline', '.title'],
-      style: 'faq-aside yellow-underline',
+      style: 'faq-aside, yellow-underline',
       blocks: ['accordion'],
       defaultContent: ['.title.cmp-title--underline', '.text', '.title:not(.cmp-title--underline)'],
     },
