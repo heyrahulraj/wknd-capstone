@@ -586,3 +586,58 @@ main .section.aside .cards-wrapper:has(.cards.people.horizontal) {
     grid-row: 1 / span 99;
   }
 }
+
+/* ---- FAQs two-column layout (faq-aside) ------------------------------------
+   Main content (FAQ heading, hero, intro, accordion) in the LEFT column; the
+   "Need more help?" contact block in a RIGHT aside. Mobile: single column
+   (aside stacks below). Desktop (>=900px): ~65% / ~30% two columns, top-aligned
+   (matches source's 8-col main + 3-col offset-1 aside). */
+
+/* hero image constrained to the content column, source-like framing */
+main .section.faq-aside .default-content-wrapper picture img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* intro paragraph: justified, larger line spacing (source parity) */
+main .section.faq-aside .default-content-wrapper p {
+  text-align: justify;
+  line-height: 1.9;
+}
+
+/* the "Need more help?" aside heading is serif (source), no accent underline */
+main .section.faq-aside .default-content-wrapper:last-child h3 {
+  font-family: var(--heading-font-family);
+  font-weight: 400;
+}
+
+@media (width >= 900px) {
+  main > .section.faq-aside {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    column-gap: 64px;
+    align-items: start;
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 0 32px;
+  }
+
+  main > .section.faq-aside > div {
+    max-width: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* main content (heading/hero/intro) + accordion fill the wide left column */
+  main .section.faq-aside .default-content-wrapper:first-child,
+  main .section.faq-aside .accordion-wrapper {
+    grid-column: 1;
+  }
+
+  /* the "Need more help?" aside (last wrapper) sits in the right column, top */
+  main .section.faq-aside .default-content-wrapper:last-child {
+    grid-column: 2;
+    grid-row: 1 / span 99;
+  }
+}

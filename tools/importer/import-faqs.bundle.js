@@ -158,9 +158,7 @@ var CustomImportScript = (() => {
       { name: "accordion", instances: [".accordion.panelcontainer"] }
     ],
     sections: [
-      { id: "rc1", name: "FAQs Intro", selector: [".title.cmp-title--underline", ".title"], style: "yellow-underline", blocks: [], defaultContent: [".title.cmp-title--underline", ".text"] },
-      { id: "rc2", name: "FAQ Accordion", selector: [".accordion.panelcontainer"], style: null, blocks: ["accordion"], defaultContent: [] },
-      { id: "rc3", name: "Need More Help", selector: [".title:not(.cmp-title--underline)", ".title"], style: null, blocks: [], defaultContent: [".title", ".text"] }
+      { id: "rc1", name: "FAQs (two-column: content + aside)", selector: [".title.cmp-title--underline", ".title"], style: "faq-aside, yellow-underline", blocks: ["accordion"], defaultContent: [".title.cmp-title--underline", ".text", ".title:not(.cmp-title--underline)"] }
     ]
   };
   var transformers = [
@@ -210,6 +208,14 @@ var CustomImportScript = (() => {
         }
       });
       executeTransformers("afterTransform", main, payload);
+      const faqSection = PAGE_TEMPLATE.sections[0];
+      if (faqSection && faqSection.style) {
+        const metadataBlock = WebImporter.Blocks.createBlock(document2, {
+          name: "Section Metadata",
+          cells: { style: faqSection.style }
+        });
+        main.prepend(metadataBlock);
+      }
       const hr = document2.createElement("hr");
       main.appendChild(hr);
       WebImporter.rules.createMetadata(main, document2);
