@@ -86,20 +86,22 @@ function decorateButtonCards(block) {
     const cell = row.firstElementChild || row;
     const heading = cell.querySelector('h1, h2, h3, h4, h5, h6');
     const anchors = [...cell.querySelectorAll('a')];
-    const downloadLink = anchors.find((a) => /download/i.test(a.textContent));
+    const downloadLinks = anchors.filter((a) => /download/i.test(a.textContent));
     if (heading && !anchors.length && !title) {
       title = cell;
-    } else if (downloadLink) {
+    } else if (downloadLinks.length) {
       panel = cell;
-      downloadLink.classList.add('cards-download');
-      // prepend the download-arrow icon before the label text
+      // the LAST "Download PDF" link is the button; any earlier one (e.g. the
+      // panel title) stays a plain link. Style + iconize only the button.
+      const button = downloadLinks[downloadLinks.length - 1];
+      button.classList.add('cards-download');
       const label = document.createElement('span');
       label.className = 'cards-download-label';
-      label.textContent = downloadLink.textContent.trim();
+      label.textContent = button.textContent.trim();
       const icon = document.createElement('span');
       icon.className = 'cards-download-icon';
       icon.innerHTML = DOWNLOAD_ICON;
-      downloadLink.replaceChildren(icon, label);
+      button.replaceChildren(icon, label);
     } else {
       stories.push(cell);
     }

@@ -408,9 +408,13 @@
 .cards.button > .cards-title h5,
 .cards.button > .cards-title h6 {
   margin: 0;
+  font-family: var(--body-font-family);
   font-size: 18px;
-  text-transform: uppercase;
+  font-weight: var(--font-weight-bold, 600);
+  line-height: 1.5;
   letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #202020;
 }
 
 /* related-story date, muted under the title */
@@ -427,7 +431,7 @@
 
 /* the PDF panel sits between the title and the story list */
 .cards.button > .cards-card-body {
-  margin: 0 0 12px;
+  margin: 50px 0;
 }
 
 /* stylelint-disable-next-line no-descending-specificity */
@@ -444,6 +448,12 @@
   text-transform: uppercase;
 }
 
+/* the panel title is a link to the PDF — keep the text black */
+.cards.button .cards-card-body p:nth-of-type(1) a {
+  color: #202020;
+  text-decoration: none;
+}
+
 .cards.button .cards-card-body p:nth-of-type(2) {
   font-size: 16px;
   font-weight: 600;
@@ -457,6 +467,12 @@
   color: dimgray;
   font-size: 12px;
   text-transform: uppercase;
+}
+
+/* the format line (the spec paragraph just before the Download button)
+   drops onto its own line */
+.cards.button .cards-card-body p:nth-of-type(n + 3):has(+ p .cards-download) {
+  clear: left;
 }
 
 /* clear the floated spec lines before the Download button */

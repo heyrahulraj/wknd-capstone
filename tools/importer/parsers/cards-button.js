@@ -60,10 +60,19 @@ export default function parse(element, { document }) {
   const dl = element.querySelector('.cmp-download, .download');
   if (dl) {
     const panel = [];
+    const pdfHref = dl.querySelector('.cmp-download__action, a[href*="coredownload"], a[href*=".pdf"]')?.getAttribute('href');
 
+    // title ("Download PDF") — a link to the same PDF as the button
     const titleText = (dl.querySelector('.cmp-download__title')?.textContent || 'Download PDF').replace(/\s+/g, ' ').trim();
     const title = document.createElement('p');
-    title.textContent = titleText;
+    if (pdfHref) {
+      const titleLink = document.createElement('a');
+      titleLink.setAttribute('href', pdfHref);
+      titleLink.textContent = titleText;
+      title.append(titleLink);
+    } else {
+      title.textContent = titleText;
+    }
     panel.push(title);
 
     const descText = (dl.querySelector('.cmp-download__description')?.textContent || '').replace(/\s+/g, ' ').trim();
@@ -84,10 +93,9 @@ export default function parse(element, { document }) {
       }
     });
 
-    const pdfLink = dl.querySelector('.cmp-download__action, a[href*="coredownload"], a[href*=".pdf"]');
-    if (pdfLink) {
+    if (pdfHref) {
       const a = document.createElement('a');
-      a.setAttribute('href', pdfLink.getAttribute('href'));
+      a.setAttribute('href', pdfHref);
       a.textContent = 'Download PDF';
       panel.push(a);
     }

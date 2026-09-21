@@ -83,9 +83,17 @@ var CustomImportScript = (() => {
     const dl = element.querySelector('.cmp-download, .download');
     if (dl) {
       const panel = [];
+      const pdfHref = dl.querySelector('.cmp-download__action, a[href*="coredownload"], a[href*=".pdf"]')?.getAttribute("href");
       const titleText = (dl.querySelector('.cmp-download__title')?.textContent || "Download PDF").replace(/\s+/g, " ").trim();
       const title2 = document2.createElement("p");
-      title2.textContent = titleText;
+      if (pdfHref) {
+        const titleLink = document2.createElement("a");
+        titleLink.setAttribute("href", pdfHref);
+        titleLink.textContent = titleText;
+        title2.append(titleLink);
+      } else {
+        title2.textContent = titleText;
+      }
       panel.push(title2);
       const descText = (dl.querySelector('.cmp-download__description')?.textContent || "").replace(/\s+/g, " ").trim();
       if (descText) {
@@ -102,10 +110,9 @@ var CustomImportScript = (() => {
           panel.push(p);
         }
       });
-      const pdfLink = dl.querySelector('.cmp-download__action, a[href*="coredownload"], a[href*=".pdf"]');
-      if (pdfLink) {
+      if (pdfHref) {
         const a = document2.createElement("a");
-        a.setAttribute("href", pdfLink.getAttribute("href"));
+        a.setAttribute("href", pdfHref);
         a.textContent = "Download PDF";
         panel.push(a);
       }
