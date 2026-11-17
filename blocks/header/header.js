@@ -1,3 +1,6 @@
+// golive-guardian: user-facing strings come from the EDS placeholders sheet.
+const placeholders = (typeof window !== 'undefined' && window.placeholders?.default) || {};
+
 // media query match that indicates desktop width
 const isDesktop = window.matchMedia('(min-width: 900px)');
 
@@ -70,7 +73,7 @@ function buildLocale(section) {
   trigger.type = 'button';
   trigger.className = 'nav-locale-toggle';
   trigger.setAttribute('aria-expanded', 'false');
-  trigger.setAttribute('aria-label', `Toggle Language ${current ? current.textContent.trim() : ''}`);
+  trigger.setAttribute('aria-label', (placeholders.toggleLanguageCurrentCurrentTextcontentTrim ?? `Toggle Language ${current ? current.textContent.trim() : ''}`));
   const flag = current ? current.querySelector('img') : null;
   trigger.innerHTML = `${flag ? flag.outerHTML : ''}<span>${current ? current.textContent.trim() : 'Language'}</span>`;
 
