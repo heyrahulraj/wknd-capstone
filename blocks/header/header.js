@@ -58,29 +58,33 @@ function buildSearch(scope) {
 }
 
 /**
- * Resolves the localized "toggle language" label from the locale's
- * placeholders.json, falling back to the English default on any failure.
- * @returns {Promise<string>} The label
+ * Fetches the locale's placeholders.json and returns a key->value map with
+ * camel-cased keys. Returns an empty object on any failure.
+ * @returns {Promise<Object<string, string>>} The placeholders
  */
-async function getToggleLanguageLabel() {
-  const fallback = 'Toggle Language';
+async function getPlaceholders() {
   try {
     const segments = window.location.pathname.split('/').filter(Boolean);
     const prefix = segments.length >= 2 ? `/${segments[0]}/${segments[1]}` : '';
     const resp = await fetch(`${prefix}/placeholders.json`);
-    if (!resp.ok) return fallback;
+    if (!resp.ok) return {};
     const json = await resp.json();
-    const { data } = json || {};
+    const data = json && json.data;
+    const toCamel = (key) => {
+      const camel = String(key).trim().replace(/[^a-zA-Z0-9]+(.)/g, (m, c) => c.toUpperCase());
+      return camel.charAt(0).toLowerCase() + camel.slice(1);
+    };
+    const result = {};
     if (Array.isArray(data)) {
-      const row = data.find((r) => r && (r.Key === 'toggleLanguage' || r.Key === 'toggle-language'));
-      return (row && row.Text) || fallback;
+      data.forEach((row) => {
+        if (row && row.Key && row.Text) result[toCamel(row.Key)] = row.Text;
+      });
+    } else if (data && typeof data === 'object') {
+      Object.keys(data).forEach((k) => { result[toCamel(k)] = data[k]; });
     }
-    if (data && typeof data === 'object') {
-      return data.toggleLanguage || data['toggle-language'] || fallback;
-    }
-    return fallback;
+    return result;
   } catch (e) {
-    return fallback;
+    return {};
   }
 }
 
@@ -92,7 +96,8 @@ async function getToggleLanguageLabel() {
 async function buildLocale(section) {
   const list = section.querySelector('ul');
   if (!list) return;
-  const label = await getToggleLanguageLabel();
+  const placeholders = await getPlaceholders();
+  const label = placeholders.toggleLanguage || 'Toggle Language';
   const current = list.querySelector('li a');
   const trigger = document.createElement('button');
   trigger.type = 'button';
