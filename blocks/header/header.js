@@ -68,15 +68,14 @@ function buildSearch(scope) {
 function buildLocale(section, placeholders = {}) {
   const list = section.querySelector('ul');
   if (!list) return;
-  const toggleLanguageLabel = placeholders.toggleLanguage || 'Toggle Language';
   const current = list.querySelector('li a');
   const trigger = document.createElement('button');
   trigger.type = 'button';
   trigger.className = 'nav-locale-toggle';
   trigger.setAttribute('aria-expanded', 'false');
-  trigger.setAttribute('aria-label', `${toggleLanguageLabel} ${current ? current.textContent.trim() : ''}`);
-  const flag = current ? current.querySelector('img') : null;
-  trigger.innerHTML = `${flag ? flag.outerHTML : ''}<span>${current ? current.textContent.trim() : 'Language'}</span>`;
+  trigger.setAttribute('aria-label', `${placeholders?.toggleLanguage || 'Toggle Language'} ${current?.textContent?.trim() || ''}`.trim());
+  const flag = current?.querySelector('img') || null;
+  trigger.innerHTML = `${flag ? flag.outerHTML : ''}<span>${current?.textContent?.trim() || 'Language'}</span>`;
 
   const wrapper = document.createElement('div');
   wrapper.className = 'nav-locale';
@@ -160,7 +159,7 @@ export default async function decorate(block) {
 
   let placeholders = {};
   try {
-    placeholders = await fetchPlaceholders();
+    placeholders = (await fetchPlaceholders()) || {};
   } catch (e) {
     placeholders = {};
   }
