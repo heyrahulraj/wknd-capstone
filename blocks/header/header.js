@@ -1,5 +1,3 @@
-import { fetchPlaceholders } from '../../scripts/aem.js';
-
 // media query match that indicates desktop width
 const isDesktop = window.matchMedia('(min-width: 900px)');
 
@@ -60,20 +58,47 @@ function buildSearch(scope) {
 }
 
 /**
+ * Resolves the localized "toggle language" label from the locale's
+ * placeholders.json, falling back to the English default on any failure.
+ * @returns {Promise<string>} The label
+ */
+async function getToggleLanguageLabel() {
+  const fallback = 'Toggle Language';
+  try {
+    const segments = window.location.pathname.split('/').filter(Boolean);
+    const prefix = segments.length >= 2 ? `/${segments[0]}/${segments[1]}` : '';
+    const resp = await fetch(`${prefix}/placeholders.json`);
+    if (!resp.ok) return fallback;
+    const json = await resp.json();
+    const { data } = json || {};
+    if (Array.isArray(data)) {
+      const row = data.find((r) => r && (r.Key === 'toggleLanguage' || r.Key === 'toggle-language'));
+      return (row && row.Text) || fallback;
+    }
+    if (data && typeof data === 'object') {
+      return data.toggleLanguage || data['toggle-language'] || fallback;
+    }
+    return fallback;
+  } catch (e) {
+    return fallback;
+  }
+}
+
+/**
  * Wires the locale selector: the first list in the utility section becomes a
  * click-toggle dropdown whose trigger shows the current locale + flag.
  * @param {Element} section The utility section
- * @param {Object} placeholders Placeholder key/value pairs for the current locale
  */
-function buildLocale(section, placeholders = {}) {
+async function buildLocale(section) {
   const list = section.querySelector('ul');
   if (!list) return;
+  const label = await getToggleLanguageLabel();
   const current = list.querySelector('li a');
   const trigger = document.createElement('button');
   trigger.type = 'button';
   trigger.className = 'nav-locale-toggle';
   trigger.setAttribute('aria-expanded', 'false');
-  trigger.setAttribute('aria-label', `${placeholders?.toggleLanguage || 'Toggle Language'} ${current?.textContent?.trim() || ''}`.trim());
+  trigger.setAttribute('aria-label', `${label} ${current?.textContent?.trim() || ''}`.trim());
   const flag = current?.querySelector('img') || null;
   trigger.innerHTML = `${flag ? flag.outerHTML : ''}<span>${current?.textContent?.trim() || 'Language'}</span>`;
 
@@ -157,13 +182,6 @@ export default async function decorate(block) {
   block.textContent = '';
   if (!fragment) return;
 
-  let placeholders = {};
-  try {
-    placeholders = (await fetchPlaceholders()) || {};
-  } catch (e) {
-    placeholders = {};
-  }
-
   const nav = document.createElement('nav');
   nav.id = 'nav';
   const { body } = fragment.doc;
@@ -178,7 +196,7 @@ export default async function decorate(block) {
   });
 
   const navUtility = nav.querySelector('.nav-utility');
-  if (navUtility) buildLocale(navUtility, placeholders);
+  if (navUtility) await buildLocale(navUtility);
 
   const navBrand = nav.querySelector('.nav-brand');
   if (navBrand) {
