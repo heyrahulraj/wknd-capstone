@@ -1,3 +1,5 @@
+import { fetchPlaceholders } from '../../scripts/aem.js';
+
 // media query match that indicates desktop width
 const isDesktop = window.matchMedia('(min-width: 900px)');
 
@@ -61,16 +63,18 @@ function buildSearch(scope) {
  * Wires the locale selector: the first list in the utility section becomes a
  * click-toggle dropdown whose trigger shows the current locale + flag.
  * @param {Element} section The utility section
+ * @param {Object} placeholders Placeholder key/value pairs for the current locale
  */
-function buildLocale(section) {
+function buildLocale(section, placeholders = {}) {
   const list = section.querySelector('ul');
   if (!list) return;
+  const toggleLanguageLabel = placeholders.toggleLanguage || 'Toggle Language';
   const current = list.querySelector('li a');
   const trigger = document.createElement('button');
   trigger.type = 'button';
   trigger.className = 'nav-locale-toggle';
   trigger.setAttribute('aria-expanded', 'false');
-  trigger.setAttribute('aria-label', `Toggle Language ${current ? current.textContent.trim() : ''}`);
+  trigger.setAttribute('aria-label', `${toggleLanguageLabel} ${current ? current.textContent.trim() : ''}`);
   const flag = current ? current.querySelector('img') : null;
   trigger.innerHTML = `${flag ? flag.outerHTML : ''}<span>${current ? current.textContent.trim() : 'Language'}</span>`;
 
@@ -154,6 +158,13 @@ export default async function decorate(block) {
   block.textContent = '';
   if (!fragment) return;
 
+  let placeholders = {};
+  try {
+    placeholders = await fetchPlaceholders();
+  } catch (e) {
+    placeholders = {};
+  }
+
   const nav = document.createElement('nav');
   nav.id = 'nav';
   const { body } = fragment.doc;
@@ -168,7 +179,7 @@ export default async function decorate(block) {
   });
 
   const navUtility = nav.querySelector('.nav-utility');
-  if (navUtility) buildLocale(navUtility);
+  if (navUtility) buildLocale(navUtility, placeholders);
 
   const navBrand = nav.querySelector('.nav-brand');
   if (navBrand) {
